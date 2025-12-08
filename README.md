@@ -3,7 +3,7 @@ web app for Retro2Cbot
 
 
 ## Backend
-** how to build application **
+**how to build application**
 1. cd backend
 2. python3 -m venv venv 
 3. - MacOs/Linux: source venv/bin/activate 
@@ -14,13 +14,13 @@ web app for Retro2Cbot
 
 
 ## Frontend
-** how to build app **
+**how to build app**
 1. cd frontend
 2. npm i 
 3. npm run build
 4. npm run start
 
-** how to use app for dev porpose **
+**how to use app for dev porpose**
 1. cd frontend
 2. npm i 
 3. npm run dev
