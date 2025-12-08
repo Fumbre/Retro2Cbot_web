@@ -4,6 +4,13 @@
 .vscode/launch.json
 .vscode/ipch
 
+# Optional npm cache directory
+.npm
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
 # ----------------------------
 # macOS system files
 # ----------------------------
