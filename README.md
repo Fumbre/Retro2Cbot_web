@@ -6,8 +6,9 @@ web app for Retro2Cbot
 **how to build application**
 1. cd backend
 2. python3 -m venv venv 
-3. - MacOs/Linux: source venv/bin/activate 
-3.1 - Windows: venv\Scripts\activate
+3. 
+- MacOs/Linux: source venv/bin/activate 
+- Windows: venv\Scripts\activate
 4. pip install -r requirement.txt
 5. python app.py
 
