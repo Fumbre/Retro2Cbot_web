@@ -1,0 +1,76 @@
+create table robots
+(
+    id         bigint  not null
+        constraint id
+            primary key,
+    robot_name varchar not null,
+    robot_code varchar not null
+);
+
+alter table robots
+    owner to root;
+
+create table robot_sonar
+(
+    id             bigint                              not null
+        constraint sonar_id
+            primary key,
+    robot_id       bigint                              not null,
+    sonar_distance real                                not null,
+    " create_time" timestamp default CURRENT_TIMESTAMP not null
+);
+
+alter table robot_sonar
+    owner to root;
+
+create table reflective_sensor
+(
+    id          bigint                              not null
+        constraint sensor_id
+            primary key,
+    robot_id    bigint                              not null,
+    a0          integer                             not null,
+    a1          integer                             not null,
+    a2          integer                             not null,
+    a3          integer                             not null,
+    a4          integer                             not null,
+    a5          integer                             not null,
+    a6          integer                             not null,
+    a7          integer                             not null,
+    create_time timestamp default CURRENT_TIMESTAMP not null
+);
+
+alter table reflective_sensor
+    owner to root;
+
+create table robot_neopxiels
+(
+    id             bigint                              not null
+        constraint neopixel_id
+            primary key,
+    robot_id       bigint                              not null,
+    neopixel_index integer                             not null,
+    r              integer                             not null,
+    g              integer                             not null,
+    b              integer                             not null,
+    create_time    timestamp default CURRENT_TIMESTAMP not null
+);
+
+alter table robot_neopxiels
+    owner to root;
+
+create table robot_pulses
+(
+    id                bigint                              not null
+        constraint pulses_id
+            primary key,
+    robot_id          bigint                              not null,
+    left_wheel_pulse  bigint                              not null,
+    right_wheel_pulse bigint                              not null,
+    create_time       timestamp default CURRENT_TIMESTAMP not null
+);
+
+alter table robot_pulses
+    owner to root;
+
+
