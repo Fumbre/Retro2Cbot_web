@@ -1,0 +1,19 @@
+@use 'colors'
+@use 'font'
+
+.header
+  padding-top: 5px
+  padding-bottom: 5px
+  background-color: colors.$mainColor
+
+.nav
+  &__list
+    display: flex
+  &__item
+    font-size: font.$linkSize
+    &:not(:last-child)
+      margin-right: 15px
+  &__link
+    display: block
+    padding: 8px
+    color: colors.$white

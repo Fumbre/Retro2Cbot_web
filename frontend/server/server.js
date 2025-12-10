@@ -9,6 +9,7 @@ const PORT = 3000;
 // console.log(process.env.DB_USERNAME);
 
 
+
 app.use(express.static(path.join(__dirname, "../dist")));
 
 app.listen(PORT, () => {
