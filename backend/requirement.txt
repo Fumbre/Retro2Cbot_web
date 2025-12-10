@@ -4,3 +4,6 @@ flask-sqlalchemy==3.1.1
 PyMySQL==1.1.2
 python-dotenv==1.2.1
 cryptography==46.0.3
+snowflake-id==1.0.2
+pyserial==3.5
+APScheduler==3.11.1
