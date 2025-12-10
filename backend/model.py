@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import BigInteger,String
+from sqlalchemy import BigInteger,String,select
 from sqlalchemy.orm import Mapped,mapped_column,DeclarativeBase
 
 class Base(DeclarativeBase):
