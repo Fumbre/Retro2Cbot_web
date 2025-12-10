@@ -1,9 +1,15 @@
-from database import db,app
+from database import app
+from flask import request
 from dotenv import load_dotenv
-from helper import getSnowFlakeId
+from service import insertRobots
 import os
 
 load_dotenv()
+
+@app.route("/insertRobots",methods = ["POST"])
+def insertRobot():
+    params = request.get_json()
+    return insertRobots(params["robotName"],params["robotCode"])
 
 
 if __name__ == "__main__":
