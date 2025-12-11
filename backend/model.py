@@ -27,7 +27,7 @@ class ReflectiveSensor(Base):
     a5:Mapped[int] = mapped_column("a5",Integer,nullable=False)
     a6:Mapped[int] = mapped_column("a6",Integer,nullable=False)
     a7:Mapped[int] = mapped_column("a7",Integer,nullable=False)
-    create_time:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
+    createTime:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
 
 class RobotPulses(Base):
     __tablename__ = "robot_pulses"
@@ -44,8 +44,8 @@ class RobotSonar(Base):
     sonarDistance:Mapped[float] = mapped_column("sonar_distance",Float,nullable=False)
     createTime:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
 
-class robotNeopxiel(Base):
-    __tablename__ = "robot_neopixels"
+class RobotNeopxiel(Base):
+    __tablename__ = "robot_neopxiels"
     id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotId:Mapped[int] = mapped_column("robot_id",BigInteger,nullable=False)
     neopixelIndex:Mapped[int] = mapped_column("neopixel_index",Integer,nullable=False)

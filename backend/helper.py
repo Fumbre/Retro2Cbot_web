@@ -2,6 +2,7 @@ from snowflake import SnowflakeGenerator
 import os
 from dotenv import load_dotenv
 from typing import Any
+from datetime import datetime
 
 load_dotenv()
 
@@ -21,10 +22,15 @@ def dict_orm(src: dict, dest):
         if hasattr(dest, k):
             setattr(dest, k, v)        
 
-def orm_dict(obj:Any) ->dict:
+def orm_dict(obj: Any) -> dict:
     result = {}
-    for attr in dir(obj):
-        if attr.startswith("_") or callable(getattr(obj, attr)):
+    for attr in obj.__mapper__.attrs:
+        try:
+            value = getattr(obj, attr.key)
+            if isinstance(value, datetime):
+                result[attr.key] = value.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                result[attr.key] = value
+        except AttributeError:
             continue
-        result[attr] = getattr(obj, attr)
     return result
