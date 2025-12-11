@@ -6,12 +6,12 @@ import os
 
 load_dotenv()
 
-@app.route("/insertRobots",methods = ["POST"])
+@app.route("/robot",methods = ["POST"])
 def insertRobot():
     params = request.get_json()
     return insertRobots(params["robotName"],params["robotCode"])
 
-@app.route("/robotList",methods = ["GET"])
+@app.route("/robot",methods = ["GET"])
 def robotList():
     return selectRobots()
 

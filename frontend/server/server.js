@@ -15,3 +15,20 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+function pop() {
+  function test() {
+    console.log('test')
+  }
+}
+
+function pop3() {
+
+  function test() {
+    console.log('test')
+  }
+  
+}
+
+pop3();
+pop();
