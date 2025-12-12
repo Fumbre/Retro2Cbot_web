@@ -5,3 +5,5 @@ python-dotenv==1.2.1
 cryptography==46.0.3
 snowflake-id==1.0.2
 psycopg2-binary==2.9.11
+Flask-SocketIO==5.5.1
+eventlet==0.40.4

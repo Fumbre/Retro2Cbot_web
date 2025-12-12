@@ -23,3 +23,10 @@ class Result:
     def error(cls, message:str=None):
         return jsonify(cls(code=500,message=message).to_dict())
     
+    @classmethod
+    def success_ws(cls, data:Optional[Any] = None, message:str=None):
+        return cls(code=200,data=data,message=message).to_dict()
+    
+    @classmethod
+    def error_ws(cls, data:Optional[Any] = None, message:str=None):
+        return cls(code=500,data=data,message=message).to_dict()
