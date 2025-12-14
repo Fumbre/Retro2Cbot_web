@@ -69,7 +69,7 @@ def selectReflectSensorList(robotId: int):
                 ReflectiveSensor.createTime >= startDate,
                 ReflectiveSensor.createTime < endDate,
             )
-        )
+        ).order_by(ReflectiveSensor.createTime.desc())
     ).fetchall()
     resultList = []
     for reflectiveSensor in dataList:
@@ -112,7 +112,7 @@ def selectSonarList(robotId: int):
                 RobotSonar.createTime >= startDate,
                 RobotSonar.createTime < endDate,
             )
-        )
+        ).order_by(RobotSonar.createTime.desc())
     ).fetchall()
 
     for sonar in list:
@@ -154,7 +154,7 @@ def selectPulsesList(robotId: int):
                 RobotPulses.createTime < endDate,
                 RobotPulses.robotId == robotId,
             )
-        )
+        ).order_by(RobotPulses.createTime.desc())
     ).fetchall()
 
     for data in result:
@@ -194,7 +194,7 @@ def selectNeopixelList(robotId:int):
             RobotNeopxiel.createTime < endDate,
             RobotNeopxiel.robotId == robotId
         )
-    )).fetchall()
+    ).order_by(RobotNeopxiel.createTime.desc())).fetchall()
     for data in result:
         neopixel = orm_dict(data)
         dataList.append(neopixel)
