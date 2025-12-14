@@ -11,7 +11,9 @@ from service import (
     insertRobotPulses,
     selectPulsesList,
     insertNeopixels,
-    selectNeopixelList
+    selectNeopixelList,
+    insertGripperList,
+    selectCurrentGripper
 )
 import os
 from flask_socketio import SocketIO, emit
@@ -75,6 +77,17 @@ def insertNeopixelList():
 def selectNeopixels(msg):
     robotId = int(msg.get("robotId"))
     emit("neopixels",selectNeopixelList(robotId))
+
+@app.route("/gripper",methods = ["POST"])
+def insertGrippers():
+    params = request.get_json()
+    return insertGripperList(params)
+
+@socketIO.on('gripper')
+def selectNewGripper(msg):
+    robotId = int(msg.get("robotId"))
+    print(robotId)
+    emit("gripper",selectCurrentGripper(robotId))
 
 if __name__ == "__main__":
     SERVER_IP = os.environ.get("SERVER_IP")

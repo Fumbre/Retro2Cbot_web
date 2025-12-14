@@ -5,7 +5,9 @@ from model import (
     RobotSonar,
     RobotPulses,
     RobotNeopxiel,
+    RobotGripper,
     select,
+    func,
     and_,
 )
 from database import db
@@ -196,4 +198,34 @@ def selectNeopixelList(robotId:int):
     for data in result:
         neopixel = orm_dict(data)
         dataList.append(neopixel)
-    return Result.success_ws(data=dataList,message="select successfully!")    
+    return Result.success_ws(data=dataList,message="select successfully!")
+
+def insertGripperList(data_list:list[dict]):
+    try:
+        if data_list is None or len(data_list) == 0:
+          return Result.error(message="data input is Empty!")
+        robotCode = data_list[0].get("robotCode")
+        gripperList = []
+        robot = db.session.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
+        for data in data_list:
+          id = getSnowFlakeId()
+          robotGripper = RobotGripper(id = id, robotId = robot.id)
+          dict_orm(data,robotGripper)
+          gripperList.append(robotGripper)
+        db.session.add_all(gripperList)
+        db.session.commit()
+        return Result.success(message="insert successfully!")
+    except Exception as e:
+        db.session.rollback()
+        return Result.error(message=e)
+
+def selectCurrentGripper(robotId:int):
+    maxTimeSQL = (select(func.max(RobotGripper.createTime)).where(RobotGripper.robotId == robotId).scalar_subquery())
+    robotGripper = db.session.scalar(select(RobotGripper).where(
+        and_(
+            RobotGripper.robotId == robotId,
+            RobotGripper.createTime == maxTimeSQL
+        )
+    ))
+    result = orm_dict(robotGripper)
+    return Result.success_ws(data=result,message="select sucessfully!")
