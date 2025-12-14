@@ -26,29 +26,6 @@ alter table robot_sonar
 create index create_time_sonar
     on robot_sonar (create_time);
 
-create table reflective_sensor
-(
-    id          bigint                              not null
-        constraint sensor_id
-            primary key,
-    robot_id    bigint                              not null,
-    a0          integer                             not null,
-    a1          integer                             not null,
-    a2          integer                             not null,
-    a3          integer                             not null,
-    a4          integer                             not null,
-    a5          integer                             not null,
-    a6          integer                             not null,
-    a7          integer                             not null,
-    create_time timestamp default CURRENT_TIMESTAMP not null
-);
-
-alter table reflective_sensor
-    owner to root;
-
-create index create_time_rs
-    on reflective_sensor (create_time);
-
 create table robot_pulses
 (
     id                bigint                              not null
@@ -98,4 +75,27 @@ alter table robot_gripper
 
 create index create_time_gripper
     on robot_gripper (create_time);
+
+create table reflective_sensor
+(
+    id             bigint                  not null
+        primary key,
+    robot_id       bigint                  not null,
+    a0             integer                 not null,
+    a1             integer                 not null,
+    a2             integer                 not null,
+    a3             integer                 not null,
+    a4             integer                 not null,
+    a5             integer                 not null,
+    a6             integer                 not null,
+    a7             integer                 not null,
+    current_status varchar                 not null,
+    create_time    timestamp default now() not null
+);
+
+alter table reflective_sensor
+    owner to root;
+
+create index create_time_rs
+    on reflective_sensor (create_time);
 

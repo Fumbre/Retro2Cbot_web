@@ -27,6 +27,7 @@ class ReflectiveSensor(Base):
     a5:Mapped[int] = mapped_column("a5",Integer,nullable=False)
     a6:Mapped[int] = mapped_column("a6",Integer,nullable=False)
     a7:Mapped[int] = mapped_column("a7",Integer,nullable=False)
+    currentStatus:Mapped[str] = mapped_column("current_status",String,nullable=False,default="00000000")
     createTime:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
 
 class RobotPulses(Base):
