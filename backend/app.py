@@ -1,6 +1,8 @@
-from database import app
-from flask import request
+from database import app,SessionLocal
+from fastapi import FastAPI,Request,WebSocket, WebSocketDisconnect
 from dotenv import load_dotenv
+from WebsocketManager import WebsocketConnectionManager
+import uvicorn
 from service import (
     insertRobots,
     selectRobots,
@@ -16,80 +18,81 @@ from service import (
     selectCurrentGripper
 )
 import os
-from flask_socketio import SocketIO, emit
 
 load_dotenv()
 
-socketIO = SocketIO(app, async_mode="eventlet", cors_allowed_origins="*")
+manager = WebsocketConnectionManager()
+
+@app.post("/robots")
+async def insertRobot(request:Request):
+    params = await request.json() if hasattr(request, "json") else {}
+    return insertRobots(request=request,robotName=params.get("robotName"),robotCode=params.get("robotCode"))
 
 
-@app.route("/robots", methods=["POST"])
-def insertRobot():
-    params = request.get_json()
-    return insertRobots(params["robotName"], params["robotCode"])
+@app.get("/robots")
+def robotList(request:Request):
+    return selectRobots(request=request)
 
 
-@app.route("/robots", methods=["GET"])
-def robotList():
-    return selectRobots()
+@app.post("/rs")
+async def insertRS(request:Request):
+    list  = await request.json() if hasattr(request, "json") else []
+    return insertReflectiveSensors(request=request, list = list)
 
 
-@app.route("/rs", methods=["POST"])
-def insertRS():
-    list = request.get_json()
-    return insertReflectiveSensors(list)
+@app.post("/sonar")
+async def insertSonars(request:Request):
+    list = await request.json() if hasattr(request, "json") else []
+    return insertRobotSonarData(request=request,list=list)
 
 
-@socketIO.on("rs")
-def reflectiveSensorList(msg):
-    robotId = int(msg.get("robotId"))
-    emit("rs", selectReflectSensorList(robotId))
+@app.post("/pulses")
+async def insertPulsesList(request:Request):
+    list = await request.json() if hasattr(request, "json") else []
+    return insertRobotPulses(request=request,list=list)
 
 
-@app.route("/sonar", methods=["POST"])
-def insertSonars():
-    params = request.get_json()
-    return insertRobotSonarData(params)
+@app.post("/neopixels")
+async def insertNeopixelList(request:Request):
+    list = await request.json() if hasattr(request, "json") else []
+    return insertNeopixels(request=request,data_list=list)
 
 
-@socketIO.on("sonar")
-def sonarList(msg):
-    robotId = int(msg.get("robotId"))
-    emit("sonar", selectSonarList(robotId))
+@app.post("/gripper")
+async def insertGrippers(request:Request):
+    list = await request.json() if hasattr(request, "json") else []
+    return insertGripperList(request=request,data_list=list)
 
+@app.websocket("/ws/robot")
+async def websocket_endpoint(websocket: WebSocket):
+    db = SessionLocal()
+    await manager.connect(websocket, "robot")
+    try:
+     while True:
+        data = await websocket.receive_json()
+        robotId = int(data.get("robotId"))
+        event = data.get("event")
+        if event == "rs":
+            result = selectReflectSensorList(request=None, robotId=robotId)
+        elif event == "sonar":
+            result = selectSonarList(db=db, robotId=robotId)
+        elif event == "pulses":
+            result = selectPulsesList(db=db, robotId=robotId)
+        elif event == "neopixels":
+            result = selectNeopixelList(db=db, robotId=robotId)
+        elif event == "gripper":
+            result = selectCurrentGripper(db=db, robotId=robotId)
+        else:
+            result = {"error": "unknown topic"}
+        await websocket.send_json(result)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket=websocket,topic="robot")
+    finally:
+        db.close()    
+        
 
-@app.route("/pulses", methods=["POST"])
-def insertPulsesList():
-    params = request.get_json()
-    return insertRobotPulses(params)
-
-@socketIO.on('pulses')
-def selectPulses(msg):
-    robotId = int(msg.get("robotId"))
-    emit("pulses",selectPulsesList(robotId))
-
-@app.route("/neopixels", methods=["POST"])
-def insertNeopixelList():
-    params = request.get_json()
-    return insertNeopixels(params)
-
-@socketIO.on('neopixels')
-def selectNeopixels(msg):
-    robotId = int(msg.get("robotId"))
-    emit("neopixels",selectNeopixelList(robotId))
-
-@app.route("/gripper",methods = ["POST"])
-def insertGrippers():
-    params = request.get_json()
-    return insertGripperList(params)
-
-@socketIO.on('gripper')
-def selectNewGripper(msg):
-    robotId = int(msg.get("robotId"))
-    print(robotId)
-    emit("gripper",selectCurrentGripper(robotId))
 
 if __name__ == "__main__":
     SERVER_IP = os.environ.get("SERVER_IP")
     SERVER_PORT = int(os.environ.get("SERVER_PORT"))
-    socketIO.run(app, host=SERVER_IP, port=SERVER_PORT, debug=True)
+    uvicorn.run("app:app", host=SERVER_IP, port=SERVER_PORT, reload=True)

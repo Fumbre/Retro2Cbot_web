@@ -7,9 +7,6 @@ from datetime import datetime
 load_dotenv()
 
 instance = int(os.environ.get("SNOWFLAKE_INSTANCE"))
-
-ser = None
-
 gen = SnowflakeGenerator(instance=instance)
 
 

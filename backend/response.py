@@ -1,6 +1,5 @@
 from typing import Any, Optional
 from dataclasses import dataclass
-from flask import jsonify
 
 @dataclass
 class Result:
@@ -17,11 +16,11 @@ class Result:
     
     @classmethod
     def success(cls, data:Optional[Any] = None, message:str=None):
-       return jsonify(cls(code=200,data=data,message=message).to_dict()) 
+       return cls(code=200,data=data,message=message).to_dict()
     
     @classmethod
     def error(cls, message:str=None):
-        return jsonify(cls(code=500,message=message).to_dict())
+        return cls(code=500,message=message).to_dict()
     
     @classmethod
     def success_ws(cls, data:Optional[Any] = None, message:str=None):

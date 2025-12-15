@@ -1,12 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import BigInteger,Integer,String,Boolean,DateTime,Float,func,select,and_
-from sqlalchemy.orm import Mapped,mapped_column,DeclarativeBase
+from sqlalchemy.orm import Mapped,mapped_column
 from datetime import datetime
+from database import Base
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
 
 
 class Robot(Base):
