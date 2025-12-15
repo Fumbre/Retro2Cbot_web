@@ -34,35 +34,6 @@ def robotList(request:Request):
     return selectRobots(request=request)
 
 
-@app.post("/rs")
-async def insertRS(request:Request):
-    list  = await request.json() if hasattr(request, "json") else []
-    return insertReflectiveSensors(request=request, list = list)
-
-
-@app.post("/sonar")
-async def insertSonars(request:Request):
-    list = await request.json() if hasattr(request, "json") else []
-    return insertRobotSonarData(request=request,list=list)
-
-
-@app.post("/pulses")
-async def insertPulsesList(request:Request):
-    list = await request.json() if hasattr(request, "json") else []
-    return insertRobotPulses(request=request,list=list)
-
-
-@app.post("/neopixels")
-async def insertNeopixelList(request:Request):
-    list = await request.json() if hasattr(request, "json") else []
-    return insertNeopixels(request=request,data_list=list)
-
-
-@app.post("/gripper")
-async def insertGrippers(request:Request):
-    list = await request.json() if hasattr(request, "json") else []
-    return insertGripperList(request=request,data_list=list)
-
 @app.websocket("/ws/robot")
 async def websocket_endpoint(websocket: WebSocket):
     db = SessionLocal()
@@ -70,21 +41,38 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
      while True:
         data = await websocket.receive_json()
-        robotId = int(data.get("robotId"))
-        event = data.get("event")
-        if event == "rs":
-            result = selectReflectSensorList(request=None, robotId=robotId)
-        elif event == "sonar":
-            result = selectSonarList(db=db, robotId=robotId)
-        elif event == "pulses":
-            result = selectPulsesList(db=db, robotId=robotId)
-        elif event == "neopixels":
-            result = selectNeopixelList(db=db, robotId=robotId)
-        elif event == "gripper":
-            result = selectCurrentGripper(db=db, robotId=robotId)
+        method = data.get("method")
+        if method == "GET":
+            robotId = int(data.get("robotId"))
+            event = data.get("event")
+            if event == "rs":
+              result = selectReflectSensorList(request=None, robotId=robotId)
+            elif event == "sonar":
+              result = selectSonarList(db=db, robotId=robotId)
+            elif event == "pulses":
+              result = selectPulsesList(db=db, robotId=robotId)
+            elif event == "neopixels":
+              result = selectNeopixelList(db=db, robotId=robotId)
+            elif event == "gripper":
+              result = selectCurrentGripper(db=db, robotId=robotId)
+            else:
+              result = {"error": "unknown event"}
+            await websocket.send_json(result)
         else:
-            result = {"error": "unknown topic"}
-        await websocket.send_json(result)
+           event = data.get("event")
+           data_list = list(data.get("data"))
+           if event == "rs":
+              result = insertReflectiveSensors(db=db, sensor_list=data_list)
+           elif event == "sonar":
+              result = insertRobotSonarData(db=db, list=data_list)
+           elif event == "pulses":
+              result = insertRobotPulses(db=db, list=data_list)
+           elif event == "neopixels":
+              result = insertNeopixels(db=db, data_list=data_list)
+           elif event == "gripper":
+              result = insertGripperList(db=db, data_list=data_list)
+           else:
+              result = {"error": "unknown event"}       
     except WebSocketDisconnect:
         manager.disconnect(websocket=websocket,topic="robot")
     finally:

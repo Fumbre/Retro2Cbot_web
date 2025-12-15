@@ -40,8 +40,7 @@ def selectRobots(request:Request):
     return Result.success(data=resultList, message="Success!")
 
 
-def insertReflectiveSensors(request:Request, sensor_list: list[dict]):
-    db = request.state.db
+def insertReflectiveSensors(db:Session, sensor_list: list[dict]):
     try:
         if sensor_list is None or len(sensor_list) == 0:
             return Result.error(message="data input is empty")
@@ -82,8 +81,7 @@ def selectReflectSensorList(db:Session,robotId: int):
     return Result.success_ws(data=resultList, message="select successfully!")
 
 
-def insertRobotSonarData(request:Request,list: list[dict]):
-    db = request.state.db
+def insertRobotSonarData(db:Session,list: list[dict]):
     try:
         if list is None or len(list) == 0:
             return Result.error(message="data input is empty")
@@ -126,8 +124,7 @@ def selectSonarList(db:Session,robotId: int):
     return Result.success_ws(data=sonarList, message="select success!")
 
 
-def insertRobotPulses(request:Request,list: list[dict]):
-    db = request.state.db
+def insertRobotPulses(db:Session,list: list[dict]):
     try:
         if list is None or len(list) == 0:
             return Result.error("data input is empty")
@@ -168,8 +165,7 @@ def selectPulsesList(db:Session,robotId: int):
         dataList.append(pulse)
     return Result.success_ws(data=dataList, message="select successfully!")
 
-def insertNeopixels(request:Request,data_list:list[dict]):
-    db = request.state.db
+def insertNeopixels(db:Session,data_list:list[dict]):
     try:
         if data_list is None or len(data_list) == 0:
             return Result.error(message="data input is Empty")
@@ -207,8 +203,7 @@ def selectNeopixelList(db:Session,robotId:int):
         dataList.append(neopixel)
     return Result.success_ws(data=dataList,message="select successfully!")
 
-def insertGripperList(request:Request,data_list:list[dict]):
-    db = request.state.db
+def insertGripperList(db:Session,data_list:list[dict]):
     try:
         if data_list is None or len(data_list) == 0:
           return Result.error(message="data input is Empty!")
