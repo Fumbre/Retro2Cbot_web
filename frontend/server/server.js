@@ -1,26 +1,42 @@
-require("dotenv").config();
-const express = require("express");
-const expressLayouts = require('express-ejs-layouts');
-const path = require("path");
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express'
+import expressLayouts from 'express-ejs-layouts'
+import path from 'node:path'
+import { fileURLToPath } from 'url';
+import fs from 'fs/promises';
 
-const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const PORT = process.env.PORT || 3000;
+const manifestPath = path.join(__dirname, '..', 'dist', 'manifest.json');
+
+// style and script
+
+const data = await fs.readFile(manifestPath, 'utf-8');
+const manifest = JSON.parse(data);
+
+
+//api
+const reflectiveRouter = (await import('./api/sensors/reflective.js')).router;
+const robotRouter = (await import('./routes/robot/robot.js')).router;
 
 // console.log(process.env.DB_USERNAME);
-
-const manifest = require(path.join(__dirname, '..', 'dist', 'manifest.json'));
+const PORT = process.env.PORT || 3000;
+const app = express();
 app.locals.assets = manifest;
+
+// static files
+app.use(express.static(path.join(__dirname, "../dist")));
 
 // view engine ejs
 app.set('view engine', 'ejs');
+
+// middleware for engine layout
 app.use(expressLayouts);
-
-// static folder
-app.use(express.static('dist'));
-
-// middleware for engine as layout
 app.set('layout', 'layout');
+
+
 
 app.get('/', (req, res) => {
   res.render('index', {
@@ -28,29 +44,15 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/robot', async (req, res) => {
-  const robots = await (await fetch('http://localhost:8080/robots')).json();
-  console.log(robots);
-  return res.json(robots)
-})
+// use api
+app.use('/', robotRouter);
+app.use('/sensors', reflectiveRouter);
 
-app.get('/robot/status/:id', async (req, res) => {
-  try {
-    let robots = await (await fetch('http://localhost:8080/robots')).json();
-
-    const test = robots.data.filter((item) => item.robotCode.toLowerCase() == req.params.id.toLowerCase())[0]
-    console.log(test)
-    return res.json(test)
-  } catch (e) {
-    return res.redirect('/')
-  }
-
-})
+// const WebSocket = require('ws');
+// const ws = new WebSocket('wss://${process.env.API_IP}:${process.env.API_PORT}/rs');
 
 
-app.use(express.static(path.join(__dirname, "../dist")));
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-

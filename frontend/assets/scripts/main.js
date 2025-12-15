@@ -3,9 +3,11 @@ import "../style/normalize.scss";
 import "../style/global.sass";
 import "../style/header.sass";
 import "../style/main.sass";
+import { test } from "../../views/Robot/Sensors/Reflective/reflective.js"
 
-// const app = el("div", { class: "app" }, "Hello robot");
-// mount(document.body, app);
+
+// TODO:
+// import "../style/footer.sass";
 
 async function getRobot() {
   const robots = await fetch('/robot');
@@ -13,3 +15,5 @@ async function getRobot() {
 }
 
 await getRobot();
+
+test();

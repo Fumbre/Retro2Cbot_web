@@ -1,0 +1,20 @@
+<section class="reflective_sensor">
+    <div class="reflective_sensor__contianer container">
+        <h2>Reflective sensors</h2>
+        <ul class="reflective_sensor__list list">
+            <% for (item in sensors) {%>
+                <li id="reflective_sensor__id<%= item %>" class="reflective_sensor__item">
+                    <div class="reflective_sensor__graph">|</div>
+                    <div class="reflective_sensor__block">
+                        <p class="reflective_sensor__name">
+                            <%= sensors[item] %>
+                        </p>
+                        <span class="reflective_sensor__value reflective_sensor__line_status<%= currentStatus[item] %>">
+                            A<%= item %>
+                        </span>
+                    </div>
+                </li>
+                <% }; %>
+        </ul>
+    </div>
+</section>

@@ -1,8 +1,14 @@
-const path = require("path");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+import path from 'node:path';
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
+import { fileURLToPath } from 'url';
 
-module.exports = (env, argv) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log(path.resolve(__dirname, 'assets/style'))
+
+const config = (env, argv) => {
   const isDev = argv.mode === "development";
 
   return {
@@ -31,7 +37,15 @@ module.exports = (env, argv) => {
           use: [
             isDev ? "style-loader" : MiniCssExtractPlugin.loader,
             "css-loader",
-            "sass-loader"
+            {
+              loader: 'sass-loader',
+              options: {
+                sassOptions: {
+                  indentedSyntax: true,
+                  loadPaths: ["assets/style"],
+                },
+              },
+            },
           ],
         },
       ],
@@ -48,3 +62,5 @@ module.exports = (env, argv) => {
     watch: isDev,
   }
 };
+
+export default config;
