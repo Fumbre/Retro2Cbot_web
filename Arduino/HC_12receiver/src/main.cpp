@@ -1,12 +1,14 @@
 #include <Arduino.h>
 #include "wifi/Wificonnector.h"
 #include "websocket/websocket.h"
+#include "hc12/hc12recive.h"
 
 unsigned long lastTime = 0;
 
 void setup()
 {
   Serial.begin(9600);
+  buildHC12Connection();
   connectWifi();
   connectWebsocket();
 }
@@ -14,11 +16,9 @@ void setup()
 void loop()
 {
   websocketLoop();
-  unsigned long now = millis();
-  if (now - lastTime >= 2000)
-  {
-    String data = "{\"method\":\"POST\",\"event\":\"gripper\",\"data\":[{\"robotCode\":\"BB016\",\"gripperStatus\":true}]}";
+  String data = receiveDataFromHC12();
+  if(!data.isEmpty()){
+    Serial.println(data);
     sendData(data);
-    lastTime = now;
   }
 }

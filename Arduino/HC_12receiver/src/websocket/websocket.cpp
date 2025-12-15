@@ -1,7 +1,7 @@
 #include "websocket.h"
 
 WebSocketsClient websocketClient;
-char* serverIP = "141.252.106.6";
+char* serverIP = "192.168.137.1";
 int port = 8080;
 char* url = "/ws/robot";
 bool wsConnected = false;

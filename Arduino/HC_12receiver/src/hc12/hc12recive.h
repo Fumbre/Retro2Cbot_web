@@ -2,4 +2,5 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-String receiveData();
+void buildHC12Connection();
+String receiveDataFromHC12();

@@ -1,16 +1,21 @@
 #include "hc12recive.h"
 
-
 #define HC12_RX 0
 #define HC12_TX 1
 
-SoftwareSerial serial(HC12_RX,HC12_TX);
+SoftwareSerial hc12(HC12_RX, HC12_TX);
 
-String receiveData(){
+void buildHC12Connection()
+{
+    hc12.begin(9600);
+}
+
+String receiveDataFromHC12()
+{
     String data;
-    if (serial.available())
+    if (hc12.available())
     {
-       data =  serial.readStringUntil('/n');
+        data = hc12.readString();
     }
     return data;
 }
