@@ -231,4 +231,5 @@ def selectCurrentGripper(db:Session,robotId:int):
         )
     ))
     result = orm_dict(robotGripper)
+    print( robotId)
     return Result.success_ws(data=result,message="select sucessfully!")

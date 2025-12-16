@@ -1,6 +1,6 @@
 import './reflective.sass'
 
 
-export function test() {
-    console.log('test');
+export async function getReflectiveData() {
+    const data = await fetch("/ws")
 }
