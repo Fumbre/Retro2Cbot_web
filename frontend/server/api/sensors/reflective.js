@@ -1,26 +1,5 @@
-import express, { json } from 'express';
-import WebSocket from 'ws';
-
+import express from 'express';
 const router = express.Router();
-
-const ws = new WebSocket(`ws:/${process.env.API_IP}:${process.env.API_PORT}/ws/robot`);
-
-ws.on('error', console.error);
-
-ws.on('open', () => {
-  const data = JSON.stringify({
-    "event": 'gripper',
-    "method": 'GET',
-    "robotCode": "BB016"
-  });
-
-  ws.send(data);
-});
-
-ws.on('message', (data) => {
-  console.log(JSON.parse(data))
-});
-
 
 router.get('/reflective', async (req, res) => {
   // const data = (await fetch(`${process.env.API_IP}:${process.env.API_PORT}/`)).json();

@@ -6,6 +6,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
 
+import { connectToRobotApi } from "./webSocket/wsClient.js"
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -37,7 +39,6 @@ app.use(expressLayouts);
 app.set('layout', 'layout');
 
 
-
 app.get('/', (req, res) => {
   res.render('index', {
     title: "Retro2Cbot"
@@ -51,7 +52,8 @@ app.use('/sensors', reflectiveRouter);
 // const WebSocket = require('ws');
 // const ws = new WebSocket('wss://${process.env.API_IP}:${process.env.API_PORT}/rs');
 
-
+// webSocket connection
+connectToRobotApi();
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
