@@ -28,7 +28,7 @@ def orm_dict(obj: Any) -> dict:
             value = getattr(obj, attr.key)
             if isinstance(value, datetime):
                 result[attr.key] = value.strftime("%Y-%m-%d %H:%M:%S")
-            elif isinstance(value,int) and (attr.key.endswith("id") or attr.key == "id"):
+            elif isinstance(value,int) and (attr.key.endswith("Id") or attr.key == "id"):
                 result[attr.key] = str(value)    
             else:
                 result[attr.key] = value

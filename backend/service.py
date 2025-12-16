@@ -62,13 +62,13 @@ def insertReflectiveSensors(db:Session, sensor_list: list[dict]):
         return Result.error(message=e)
 
 
-def selectReflectSensorList(db:Session,robotId: int):
+def selectReflectSensorList(db:Session,robotCode: str):
     startDate = datetime.combine(date.today(), datetime.min.time()) 
     endDate = startDate + timedelta(days=1)
     dataList = db.scalars(
-        select(ReflectiveSensor).where(
+        select(ReflectiveSensor).join(Robot,Robot.id == ReflectiveSensor.robotId).where(
             and_(
-                ReflectiveSensor.robotId == robotId,
+                Robot.robotCode == robotCode,
                 ReflectiveSensor.createTime >= startDate,
                 ReflectiveSensor.createTime < endDate,
             )
@@ -103,15 +103,15 @@ def insertRobotSonarData(db:Session,list: list[dict]):
         return Result.error(message=e)
 
 
-def selectSonarList(db:Session,robotId: int):
+def selectSonarList(db:Session,robotCode: str):
     startDate = datetime.combine(date.today(), datetime.min.time()) 
     endDate = startDate + timedelta(days=1)
     endDate = startDate + timedelta(days=1)
     sonarList = []
     list = db.scalars(
-        select(RobotSonar).where(
+        select(RobotSonar).join(Robot, Robot.id == RobotSonar.robotId).where(
             and_(
-                RobotSonar.robotId == robotId,
+                Robot.robotCode == robotCode,
                 RobotSonar.createTime >= startDate,
                 RobotSonar.createTime < endDate,
             )
@@ -146,16 +146,16 @@ def insertRobotPulses(db:Session,list: list[dict]):
         return Result.error(message=e)
 
 
-def selectPulsesList(db:Session,robotId: int):
+def selectPulsesList(db:Session,robotCode: str):
     startDate = datetime.combine(date.today(), datetime.min.time()) 
     endDate = startDate + timedelta(days=1)
     dataList = []
     result = db.scalars(
-        select(RobotPulses).where(
+        select(RobotPulses).join(Robot, Robot.id == RobotPulses.robotId).where(
             and_(
                 RobotPulses.createTime >= startDate,
                 RobotPulses.createTime < endDate,
-                RobotPulses.robotId == robotId,
+                Robot.robotCode == robotCode,
             )
         ).order_by(RobotPulses.createTime.desc())
     ).fetchall()
@@ -187,15 +187,15 @@ def insertNeopixels(db:Session,data_list:list[dict]):
         db.rollback()
         return Result.error(message=e)
 
-def selectNeopixelList(db:Session,robotId:int):
+def selectNeopixelList(db:Session,robotCode:str):
     startDate = datetime.combine(date.today(), datetime.min.time()) 
     endDate = startDate + timedelta(days=1)
     dataList = []
-    result = db.scalars(select(RobotNeopxiel).where(
+    result = db.scalars(select(RobotNeopxiel).join(Robot, Robot.id == RobotNeopxiel.robotId).where(
         and_(
             RobotNeopxiel.createTime >= startDate,
             RobotNeopxiel.createTime < endDate,
-            RobotNeopxiel.robotId == robotId
+            Robot.robotCode == robotCode
         )
     ).order_by(RobotNeopxiel.createTime.desc())).fetchall()
     for data in result:
@@ -222,11 +222,12 @@ def insertGripperList(db:Session,data_list:list[dict]):
         db.rollback()
         return Result.error(message=e)
 
-def selectCurrentGripper(db:Session,robotId:int):
-    maxTimeSQL = (select(func.max(RobotGripper.createTime)).where(RobotGripper.robotId == robotId).scalar_subquery())
+def selectCurrentGripper(db:Session,robotCode:str):
+    robot = db.scalar(select(Robot).where(Robot.robotCode == robotCode))
+    maxTimeSQL = (select(func.max(RobotGripper.createTime)).where(RobotGripper.robotId == robot.id).scalar_subquery())
     robotGripper = db.scalar(select(RobotGripper).where(
         and_(
-            RobotGripper.robotId == robotId,
+            RobotGripper.robotId == robot.id,
             RobotGripper.createTime == maxTimeSQL
         )
     ))
