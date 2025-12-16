@@ -3,7 +3,6 @@
 #include "websocket/websocket.h"
 #include "hc12/hc12recive.h"
 
-unsigned long lastTime = 0;
 
 void setup()
 {
