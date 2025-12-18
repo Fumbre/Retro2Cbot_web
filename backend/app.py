@@ -41,6 +41,7 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
      while True:
         data = await websocket.receive_json()
+        print(data)
         method = data.get("method")
         if method == "GET":
             robotCode = data.get("robotCode")

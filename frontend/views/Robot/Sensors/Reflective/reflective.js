@@ -7,4 +7,16 @@ export async function getReflectiveData() {
     ws.onmessage = (e) => {
         console.log('got it: ', e.data);
     };
+
+    ws.onopen = () => {
+        const data = {
+            robotCode: "BB016",
+            method: "GET",
+            event: "gripper"
+        }
+
+        ws.send(JSON.stringify(data))
+    }
+
+
 }
