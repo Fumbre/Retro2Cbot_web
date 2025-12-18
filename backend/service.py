@@ -55,10 +55,10 @@ def insertReflectiveSensors(db:Session, sensor_list: list[dict]):
             dict_orm(sensor, rs)
             sensors.append(rs)
         db.add_all(sensors)
-        db.session.commit()
+        db.commit()
         return Result.success(message="insert sucess!")
     except Exception as e:
-        db.session.rollback()
+        db.rollback()
         return Result.error(message=e)
 
 

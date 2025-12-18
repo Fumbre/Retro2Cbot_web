@@ -46,7 +46,7 @@ async def websocket_endpoint(websocket: WebSocket):
             robotCode = data.get("robotCode")
             event = data.get("event")
             if event == "rs":
-              result = selectReflectSensorList(request=None, robotCode=robotCode)
+              result = selectReflectSensorList(db=db, robotCode=robotCode)
             elif event == "sonar":
               result = selectSonarList(db=db, robotCode=robotCode)
             elif event == "pulses":
@@ -72,7 +72,8 @@ async def websocket_endpoint(websocket: WebSocket):
            elif event == "gripper":
               result = insertGripperList(db=db, data_list=data_list)
            else:
-              result = {"error": "unknown event"}       
+              result = {"error": "unknown event"}
+           await websocket.send_json(result)          
     except WebSocketDisconnect:
         manager.disconnect(websocket=websocket,topic="robot")
     finally:
