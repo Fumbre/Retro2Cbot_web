@@ -5,16 +5,16 @@ import expressLayouts from 'express-ejs-layouts'
 import path from 'node:path'
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
-
+import http from 'http';
 import { connectToRobotApi } from "./webSocket/wsClient.js"
+import { initWSS } from "./webSocket/wsServer.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const manifestPath = path.join(__dirname, '..', 'dist', 'manifest.json');
 
-// style and script
-
+// style and script json read
 const data = await fs.readFile(manifestPath, 'utf-8');
 const manifest = JSON.parse(data);
 
@@ -26,9 +26,12 @@ const robotRouter = (await import('./routes/robot/robot.js')).router;
 // console.log(process.env.DB_USERNAME);
 const PORT = process.env.PORT || 3000;
 const app = express();
-app.locals.assets = manifest;
+
+// http server for websocket
+const server = http.createServer(app);
 
 // static files
+app.locals.assets = manifest; // path to css and js
 app.use(express.static(path.join(__dirname, "../dist")));
 
 // view engine ejs
@@ -49,12 +52,10 @@ app.get('/', (req, res) => {
 app.use('/', robotRouter);
 app.use('/sensors', reflectiveRouter);
 
-// const WebSocket = require('ws');
-// const ws = new WebSocket('wss://${process.env.API_IP}:${process.env.API_PORT}/rs');
-
 // webSocket connection
 connectToRobotApi();
+initWSS(server)
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

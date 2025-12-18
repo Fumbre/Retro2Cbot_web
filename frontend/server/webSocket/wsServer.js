@@ -1,37 +1,36 @@
 import { WebSocketServer } from 'ws';
+import bus from './bus.js';
 
-const wss = new WebSocketServer({
-  port: process.env.PORT || 3000,
-  perMessageDeflate: {
-    zlibDeflateOptions: {
-      // See zlib defaults.
-      chunkSize: 1024,
-      memLevel: 7,
-      level: 3
-    },
-    zlibInflateOptions: {
-      chunkSize: 10 * 1024
-    },
-    // Other options settable:
-    clientNoContextTakeover: true, // Defaults to negotiated value.
-    serverNoContextTakeover: true, // Defaults to negotiated value.
-    serverMaxWindowBits: 10, // Defaults to negotiated value.
-    // Below options specified as default values.
-    concurrencyLimit: 10, // Limits zlib concurrency for perf.
-    threshold: 1024 // Size (in bytes) below which messages
-    // should not be compressed if context takeover is disabled.
-  }
-});
+export const clients = new Map();
 
+export function initWSS(server) {
+  const wss = new WebSocketServer({ server, path: '/ws' });
 
+  wss.on('connection', (ws, req) => {
+    // todo:
+    // jwt
+    // const sessionId = req.headers['x-session-id'];
 
-wss.on('connection', function connection(ws) {
-  ws.on('error', console.error);
+    // if (!sessionId) {
+    //   ws.close(1008, "Unauthorized"); // 1008 code for ws connection "Policy Violation"
+    //   return;
+    // }
 
-  ws.on('message', function message(data) {
-    console.log('received: %s', data);
+    // clients.set(sessionId, ws);
+
+    ws.on('error', console.error);
+
+    ws.on('message', function message(data) {
+      console.log('received: %s', data);
+    });
+
+    ws.send('something');
   });
 
-  ws.send('something');
-});
+  bus.on('sensors', (data) => {
+    wss.clients.forEach(ws => ws.send(data));
+  });
+}
+
+
 

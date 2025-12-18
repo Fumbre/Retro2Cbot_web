@@ -5,7 +5,6 @@ import "../style/header.sass";
 import "../style/main.sass";
 import { getReflectiveData } from "../../views/Robot/Sensors/Reflective/reflective.js"
 
-
 // TODO:
 // import "../style/footer.sass";
 
