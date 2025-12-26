@@ -3,19 +3,13 @@ import { ws } from '../../../../assets/scripts/main.js';
 
 
 export function getReflectiveData() {
-    ws.onopen = () => {
-        ws.send(JSON.stringify({ type: 'hello' }));
-    };
-
-    ws.onopen = () => {
-        const data = {
-            robotCode: "BB016",
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            event: "rs",
             method: "GET",
-            event: "gripper"
-        }
-
-        ws.send(JSON.stringify(data))
+            robotCode: "BB016"
+        }));
     }
 
-
+    // ws.send(JSON.stringify({ test: "test" }))
 }

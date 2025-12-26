@@ -6,7 +6,7 @@ export function nodeWebsocket() {
     ws = new WebSocket('ws://localhost:3000/ws');
 
     ws.onmessage = (e) => {
-      console.log('got it: ', e.data);
+      console.log('got it: ', JSON.parse(e.data));
     };
 
     ws.onclose = (e) => {

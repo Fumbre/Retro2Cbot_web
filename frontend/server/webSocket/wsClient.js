@@ -1,4 +1,6 @@
 import WebSocket from 'ws';
+import bus from './bus.js';
+
 
 export let wsApi = null;
 let intervalId = null;
@@ -15,7 +17,10 @@ export function connectToRobotApi() {
 	})
 
 	wsApi.on('message', function message(data) {
-		console.log("where: is data?: %s", data);
+		const dataParsed = JSON.parse(data);
+		console.log("I got from python", dataParsed);
+
+		bus.emit('apiResponse', JSON.stringify(dataParsed));
 	})
 
 

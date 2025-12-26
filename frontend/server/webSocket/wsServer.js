@@ -22,16 +22,18 @@ export function initWSS(server) {
     ws.on('error', console.error);
 
     ws.on('message', function message(data) {
-      console.log('received:',);
-      const test = JSON.parse(data)
-      wsApi.send(JSON.stringify(test));
+      const dataParsed = JSON.parse(data)
+      console.log("frontend data:", dataParsed);
+      wsApi.send(JSON.stringify(dataParsed));
     });
 
-    ws.send('something');
+    ws.send('connected for first time');
   });
 
-  bus.on('sensors', (data) => {
-    wss.clients.forEach(ws => ws.send(data));
+  bus.on('apiResponse', (data) => {
+    const dataParsed = JSON.parse(data)
+    console.log("node.js send data to front: ", dataParsed)
+    wss.clients.forEach(ws => ws.send(JSON.stringify(dataParsed)));
   });
 }
 
