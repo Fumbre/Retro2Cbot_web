@@ -1,3 +1,5 @@
+import wsBus from "./wsBus.js";
+
 let ws;
 let timeout;
 

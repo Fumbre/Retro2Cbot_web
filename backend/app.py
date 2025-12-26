@@ -48,17 +48,37 @@ async def websocket_endpoint(websocket: WebSocket):
             event = data.get("event")
             if event == "rs":
               result = selectReflectSensorList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
             elif event == "sonar":
               result = selectSonarList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
             elif event == "pulses":
               result = selectPulsesList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
             elif event == "neopixels":
               result = selectNeopixelList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
             elif event == "gripper":
               result = selectCurrentGripper(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
             else:
               result = {"error": "unknown event"}
-            await websocket.send_json(result)
+            await websocket.send_json(myResult)
         else:
            event = data.get("event")
            data_list = list(data.get("data"))

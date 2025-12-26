@@ -27,7 +27,7 @@ export function initWSS(server) {
       wsApi.send(JSON.stringify(dataParsed));
     });
 
-    ws.send('connected for first time');
+    ws.send(JSON.stringify({ ping: 'connected for first time' }));
   });
 
   bus.on('apiResponse', (data) => {
