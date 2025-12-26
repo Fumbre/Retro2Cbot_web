@@ -1,4 +1,5 @@
 import { WebSocketServer } from 'ws';
+import { wsApi } from "./wsClient.js"
 import bus from './bus.js';
 
 export const clients = new Map();
@@ -21,7 +22,9 @@ export function initWSS(server) {
     ws.on('error', console.error);
 
     ws.on('message', function message(data) {
-      console.log('received: %s', data);
+      console.log('received:',);
+      const test = JSON.parse(data)
+      wsApi.send(JSON.stringify(test));
     });
 
     ws.send('something');

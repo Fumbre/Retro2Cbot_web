@@ -1,36 +1,41 @@
 import WebSocket from 'ws';
 
-let ws = null;
+export let wsApi = null;
 let intervalId = null;
 
 export function connectToRobotApi() {
-	if (ws) return ws;
+	if (wsApi) return wsApi;
 
-	ws = new WebSocket(`ws://${process.env.API_IP}:${process.env.API_PORT}/ws/robot`);
+	wsApi = new WebSocket(`ws://${process.env.API_IP}:${process.env.API_PORT}/ws/robot`);
 
-	ws.on("open", () => {
+	wsApi.on("open", () => {
 		if (intervalId != null) {
 			clearInterval(intervalId);
 		}
 	})
 
-	ws.on('close', () => {
+	wsApi.on('message', function message(data) {
+		console.log("where: is data?: %s", data);
+	})
+
+
+	wsApi.on('close', () => {
 		console.log('WS closed, reconnecting...');
-		ws = null;
+		wsApi = null;
 
 		// clear interval
 		if (intervalId != null) {
 			clearInterval(intervalId);
 		}
 
-		intervalId = setInterval(connectToPython, 2000);
+		intervalId = setInterval(connectToRobotApi, 2000);
 	});
 
-	ws.on('error', (err) => {
+	wsApi.on('error', (err) => {
 		console.error('WS error:', err);
 	});
 
-	return ws;
+	return wsApi;
 }
 
 // ws.on('error', console.error);
