@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/robot', async (req, res) => {
     console.log(process.env.API_IP)
     const robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
-    console.log(robots);
+    // console.log(robots);
     return res.json(robots)
 })
 

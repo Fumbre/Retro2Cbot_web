@@ -1,10 +1,9 @@
 import './reflective.sass'
+import { ws } from '../../../../assets/scripts/main.js';
 
 
-export async function getReflectiveData() {
-    const ws = new WebSocket('ws://localhost:3000/ws');
-
-    ws.onmessage = (e) => {
-        console.log('got it: ', e.data);
+export function getReflectiveData() {
+    ws.onopen = () => {
+        ws.send(JSON.stringify({ type: 'hello' }));
     };
 }

@@ -23,9 +23,9 @@ router.get('/reflective', async (req, res) => {
     reflective_sensor_values.push(data[`a${index}`]);
   }
 
-  console.log(data.currentStatus[0]);
+  // console.log(data.currentStatus[0]);
 
-  console.log(data);
+  // console.log(data);
   return res.render('./Robot/Sensors/Reflective/reflective', {
     title: 'Reflective Sensor',
     sensors: reflective_sensor_values,
