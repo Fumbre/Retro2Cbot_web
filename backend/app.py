@@ -74,6 +74,12 @@ async def websocket_endpoint(websocket: WebSocket):
          #   await websocket.send_json(result)
     except WebSocketDisconnect:
         manager.disconnect(websocket=websocket,topic="robot")
+        if push_task: 
+           push_task.cancel() 
+        try: 
+         await push_task 
+        except asyncio.CancelledError: 
+           print("Push task fully stopped")
     finally:
         db.close()    
         clients.remove(websocket)
