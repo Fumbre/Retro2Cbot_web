@@ -8,17 +8,23 @@ export function getReflectiveData(robotId) {
         return;
 
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({
-            event: "rs",
-            method: "GET",
-            robotCode: robotId
-        }));
+        wsBus.on('rs', (data) => {
+            const dataParsed = JSON.parse(data)
+            console.log("ws bus got rs data", dataParsed)
+            // updateReflectiveSensors(data);
+        })
+        // ws.send(JSON.stringify({
+        //     event: "rs",
+        //     method: "GET",
+        //     robotCode: robotId
+        // }));
     }
 
     // ws.send(JSON.stringify({ test: "test" }))
 }
 
-wsBus.on('rs', (data) => {
-    const dataParsed = JSON.parse(data)
-    console.log("ws bus got rs data", dataParsed)
-})
+
+
+function updateReflectiveSensors(data) {
+
+}

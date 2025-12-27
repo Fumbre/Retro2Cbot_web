@@ -24,7 +24,7 @@ export function initWSS(server) {
     ws.on('message', function message(data) {
       const dataParsed = JSON.parse(data)
       console.log("frontend data:", dataParsed);
-      wsApi.send(JSON.stringify(dataParsed));
+      // wsApi.send(JSON.stringify(dataParsed));
     });
 
     ws.send(JSON.stringify({ ping: 'connected for first time' }));

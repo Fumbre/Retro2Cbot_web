@@ -11,6 +11,7 @@ export function connectToRobotApi() {
 	wsApi = new WebSocket(`ws://${process.env.API_IP}:${process.env.API_PORT}/ws/robot`);
 
 	wsApi.on("open", () => {
+		console.log("im here")
 		if (intervalId != null) {
 			clearInterval(intervalId);
 		}
