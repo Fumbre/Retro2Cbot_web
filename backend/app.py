@@ -6,18 +6,15 @@ import uvicorn
 from service import (
     insertRobots,
     selectRobots,
-    selectReflectSensorList,
     insertReflectiveSensors,
     insertRobotSonarData,
-    selectSonarList,
     insertRobotPulses,
-    selectPulsesList,
     insertNeopixels,
-    selectNeopixelList,
     insertGripperList,
-    selectCurrentGripper
+    push_data_loop
 )
 import os
+import asyncio
 
 load_dotenv()
 
@@ -46,44 +43,14 @@ async def websocket_endpoint(websocket: WebSocket):
     try:
      while True:
         data = await websocket.receive_json()
-        print(data)
         method = data.get("method")
+        push_task = None
         if method == "GET":
             robotCode = data.get("robotCode")
             event = data.get("event")
-            if event == "rs":
-              result = selectReflectSensorList(db=db, robotCode=robotCode)
-              myResult = {
-                 **result,
-                 "event": event
-              }
-            elif event == "sonar":
-              result = selectSonarList(db=db, robotCode=robotCode)
-              myResult = {
-                 **result,
-                 "event": event
-              }
-            elif event == "pulses":
-              result = selectPulsesList(db=db, robotCode=robotCode)
-              myResult = {
-                 **result,
-                 "event": event
-              }
-            elif event == "neopixels":
-              result = selectNeopixelList(db=db, robotCode=robotCode)
-              myResult = {
-                 **result,
-                 "event": event
-              }
-            elif event == "gripper":
-              result = selectCurrentGripper(db=db, robotCode=robotCode)
-              myResult = {
-                 **result,
-                 "event": event
-              }
-            else:
-              result = {"error": "unknown event"}
-            await websocket.send_json(myResult)
+            if push_task:
+               push_task.cancel()
+            push_task = asyncio.create_task(push_data_loop(websocket=websocket,db_factory=SessionLocal,robotCode=robotCode,event=event)) 
         else:
            event = data.get("event")
            data_list = list(data.get("data"))
