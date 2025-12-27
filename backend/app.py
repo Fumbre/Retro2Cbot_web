@@ -6,17 +6,23 @@ import uvicorn
 from service import (
     insertRobots,
     selectRobots,
+    selectReflectSensorList,
     insertReflectiveSensors,
     insertRobotSonarData,
+    selectSonarList,
     insertRobotPulses,
+    selectPulsesList,
     insertNeopixels,
+    selectNeopixelList,
     insertGripperList,
-    push_data_loop
+    selectCurrentGripper
 )
 import os
-import asyncio
 
 load_dotenv()
+
+# Set to hold connected clients
+clients = set()
 
 manager = WebsocketConnectionManager()
 
@@ -33,20 +39,51 @@ def robotList(request:Request):
 
 @app.websocket("/ws/robot")
 async def websocket_endpoint(websocket: WebSocket):
+    clients.add(websocket)
+    
     db = SessionLocal()
     await manager.connect(websocket, "robot")
-    push_task = None
     try:
      while True:
         data = await websocket.receive_json()
+        print(data)
         method = data.get("method")
         if method == "GET":
             robotCode = data.get("robotCode")
             event = data.get("event")
-            if push_task:
-               push_task.cancel()
-
-            push_task = asyncio.create_task(push_data_loop(websocket=websocket,db_factory=SessionLocal,robotCode=robotCode,event=event)) 
+            if event == "rs":
+              result = selectReflectSensorList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
+            elif event == "sonar":
+              result = selectSonarList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
+            elif event == "pulses":
+              result = selectPulsesList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
+            elif event == "neopixels":
+              result = selectNeopixelList(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
+            elif event == "gripper":
+              result = selectCurrentGripper(db=db, robotCode=robotCode)
+              myResult = {
+                 **result,
+                 "event": event
+              }
+            else:
+              result = {"error": "unknown event"}
+            await websocket.send_json(myResult)
         else:
            event = data.get("event")
            data_list = list(data.get("data"))
@@ -62,19 +99,19 @@ async def websocket_endpoint(websocket: WebSocket):
               result = insertGripperList(db=db, data_list=data_list)
            else:
               result = {"error": "unknown event"}
-           await websocket.send_json(result)          
+           for client in clients.copy():
+              try:
+               await client.send_json(data)
+              except websocket.ConnectionClosed:
+               clients.remove(client)
+         #   await websocket.send_json(result)
     except WebSocketDisconnect:
         manager.disconnect(websocket=websocket,topic="robot")
-        if push_task:
-         push_task.cancel() 
-         try:
-            await push_task
-         except asyncio.CancelledError:
-            print("Push task fully stopped")
     finally:
         db.close()    
-        
+        clients.remove(websocket)
 
+        
 
 
 if __name__ == "__main__":
