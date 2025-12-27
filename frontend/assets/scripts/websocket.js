@@ -8,7 +8,9 @@ export function nodeWebsocket() {
     ws = new WebSocket('ws://localhost:3000/ws');
 
     ws.onmessage = (e) => {
-      console.log('got it: ', JSON.parse(e.data));
+      const dataParsed = JSON.parse(e.data)
+      console.log('got it: ', dataParsed);
+      wsBus.emit(`${dataParsed.event}`, JSON.stringify(dataParsed))
     };
 
     ws.onclose = (e) => {
