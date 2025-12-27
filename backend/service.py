@@ -12,11 +12,12 @@ from model import (
 )
 from fastapi import Request
 from response import Result
-from datetime import date, timedelta,datetime
+from datetime import date, timedelta, datetime
 from sqlalchemy.orm import Session
+import asyncio
 
 
-def insertRobots(request:Request,robotName: str, robotCode: str):
+def insertRobots(request: Request, robotName: str, robotCode: str):
     db = request.state.db
     try:
         id = getSnowFlakeId()
@@ -29,25 +30,27 @@ def insertRobots(request:Request,robotName: str, robotCode: str):
         return Result.error(message=str(e))
 
 
-def selectRobots(request:Request):
+def selectRobots(request: Request):
     db = request.state.db
     data = db.scalars(select(Robot)).fetchall()
     resultList = []
     for robot in data:
         resultList.append(
-            {"id": str(robot.id), "robotName": robot.robotName, "robotCode": robot.robotCode}
+            {
+                "id": str(robot.id),
+                "robotName": robot.robotName,
+                "robotCode": robot.robotCode,
+            }
         )
     return Result.success(data=resultList, message="Success!")
 
 
-def insertReflectiveSensors(db:Session, sensor_list: list[dict]):
+def insertReflectiveSensors(db: Session, sensor_list: list[dict]):
     try:
         if sensor_list is None or len(sensor_list) == 0:
             return Result.error(message="data input is empty")
         robotCode = sensor_list[0].get("robotCode")
-        robot = db.scalars(
-            select(Robot).where(Robot.robotCode == robotCode)
-        ).first()
+        robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sensors = []
         for sensor in sensor_list:
             id = getSnowFlakeId()
@@ -62,17 +65,20 @@ def insertReflectiveSensors(db:Session, sensor_list: list[dict]):
         return Result.error(message=e)
 
 
-def selectReflectSensorList(db:Session,robotCode: str):
-    startDate = datetime.combine(date.today(), datetime.min.time()) 
+def selectReflectSensorList(db: Session, robotCode: str):
+    startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     dataList = db.scalars(
-        select(ReflectiveSensor).join(Robot,Robot.id == ReflectiveSensor.robotId).where(
+        select(ReflectiveSensor)
+        .join(Robot, Robot.id == ReflectiveSensor.robotId)
+        .where(
             and_(
                 Robot.robotCode == robotCode,
                 ReflectiveSensor.createTime >= startDate,
                 ReflectiveSensor.createTime < endDate,
             )
-        ).order_by(ReflectiveSensor.createTime.desc())
+        )
+        .order_by(ReflectiveSensor.createTime.desc())
     ).fetchall()
     resultList = []
     for reflectiveSensor in dataList:
@@ -81,14 +87,12 @@ def selectReflectSensorList(db:Session,robotCode: str):
     return Result.success_ws(data=resultList, message="select successfully!")
 
 
-def insertRobotSonarData(db:Session,list: list[dict]):
+def insertRobotSonarData(db: Session, list: list[dict]):
     try:
         if list is None or len(list) == 0:
             return Result.error(message="data input is empty")
         robotCode = list[0].get("robotCode")
-        robot = db.scalars(
-            select(Robot).where(Robot.robotCode == robotCode)
-        ).first()
+        robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sonars = []
         for sonar in list:
             id = getSnowFlakeId()
@@ -103,19 +107,22 @@ def insertRobotSonarData(db:Session,list: list[dict]):
         return Result.error(message=e)
 
 
-def selectSonarList(db:Session,robotCode: str):
-    startDate = datetime.combine(date.today(), datetime.min.time()) 
+def selectSonarList(db: Session, robotCode: str):
+    startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     endDate = startDate + timedelta(days=1)
     sonarList = []
     list = db.scalars(
-        select(RobotSonar).join(Robot, Robot.id == RobotSonar.robotId).where(
+        select(RobotSonar)
+        .join(Robot, Robot.id == RobotSonar.robotId)
+        .where(
             and_(
                 Robot.robotCode == robotCode,
                 RobotSonar.createTime >= startDate,
                 RobotSonar.createTime < endDate,
             )
-        ).order_by(RobotSonar.createTime.desc())
+        )
+        .order_by(RobotSonar.createTime.desc())
     ).fetchall()
 
     for sonar in list:
@@ -124,14 +131,12 @@ def selectSonarList(db:Session,robotCode: str):
     return Result.success_ws(data=sonarList, message="select success!")
 
 
-def insertRobotPulses(db:Session,list: list[dict]):
+def insertRobotPulses(db: Session, list: list[dict]):
     try:
         if list is None or len(list) == 0:
             return Result.error("data input is empty")
         robotCode = list[0].get("robotCode")
-        robot = db.scalars(
-            select(Robot).where(Robot.robotCode == robotCode)
-        ).first()
+        robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         pulsesList = []
         for data in list:
             id = getSnowFlakeId()
@@ -146,18 +151,21 @@ def insertRobotPulses(db:Session,list: list[dict]):
         return Result.error(message=e)
 
 
-def selectPulsesList(db:Session,robotCode: str):
-    startDate = datetime.combine(date.today(), datetime.min.time()) 
+def selectPulsesList(db: Session, robotCode: str):
+    startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     dataList = []
     result = db.scalars(
-        select(RobotPulses).join(Robot, Robot.id == RobotPulses.robotId).where(
+        select(RobotPulses)
+        .join(Robot, Robot.id == RobotPulses.robotId)
+        .where(
             and_(
                 RobotPulses.createTime >= startDate,
                 RobotPulses.createTime < endDate,
                 Robot.robotCode == robotCode,
             )
-        ).order_by(RobotPulses.createTime.desc())
+        )
+        .order_by(RobotPulses.createTime.desc())
     ).fetchall()
 
     for data in result:
@@ -165,56 +173,62 @@ def selectPulsesList(db:Session,robotCode: str):
         dataList.append(pulse)
     return Result.success_ws(data=dataList, message="select successfully!")
 
-def insertNeopixels(db:Session,data_list:list[dict]):
+
+def insertNeopixels(db: Session, data_list: list[dict]):
     try:
         if data_list is None or len(data_list) == 0:
             return Result.error(message="data input is Empty")
         print(data_list)
         neopexielList = []
         robotCode = data_list[0].get("robotCode")
-        robot = db.scalars(
-            select(Robot).where(Robot.robotCode == robotCode)
-        ).first()
+        robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         for data in data_list:
             id = getSnowFlakeId()
-            neopixel = RobotNeopxiel(id = id, robotId = robot.id)
-            dict_orm(data,neopixel)
-            neopexielList.append(neopixel)    
-        db.add_all(neopexielList) 
+            neopixel = RobotNeopxiel(id=id, robotId=robot.id)
+            dict_orm(data, neopixel)
+            neopexielList.append(neopixel)
+        db.add_all(neopexielList)
         db.commit()
         return Result.success(message="insert successfully!")
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
 
-def selectNeopixelList(db:Session,robotCode:str):
-    startDate = datetime.combine(date.today(), datetime.min.time()) 
+
+def selectNeopixelList(db: Session, robotCode: str):
+    startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     dataList = []
-    result = db.scalars(select(RobotNeopxiel).join(Robot, Robot.id == RobotNeopxiel.robotId).where(
-        and_(
-            RobotNeopxiel.createTime >= startDate,
-            RobotNeopxiel.createTime < endDate,
-            Robot.robotCode == robotCode
+    result = db.scalars(
+        select(RobotNeopxiel)
+        .join(Robot, Robot.id == RobotNeopxiel.robotId)
+        .where(
+            and_(
+                RobotNeopxiel.createTime >= startDate,
+                RobotNeopxiel.createTime < endDate,
+                Robot.robotCode == robotCode,
+            )
         )
-    ).order_by(RobotNeopxiel.createTime.desc())).fetchall()
+        .order_by(RobotNeopxiel.createTime.desc())
+    ).fetchall()
     for data in result:
         neopixel = orm_dict(data)
         dataList.append(neopixel)
-    return Result.success_ws(data=dataList,message="select successfully!")
+    return Result.success_ws(data=dataList, message="select successfully!")
 
-def insertGripperList(db:Session,data_list:list[dict]):
+
+def insertGripperList(db: Session, data_list: list[dict]):
     try:
         if data_list is None or len(data_list) == 0:
-          return Result.error(message="data input is Empty!")
+            return Result.error(message="data input is Empty!")
         robotCode = data_list[0].get("robotCode")
         gripperList = []
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         for data in data_list:
-          id = getSnowFlakeId()
-          robotGripper = RobotGripper(id = id, robotId = robot.id)
-          dict_orm(data,robotGripper)
-          gripperList.append(robotGripper)
+            id = getSnowFlakeId()
+            robotGripper = RobotGripper(id=id, robotId=robot.id)
+            dict_orm(data, robotGripper)
+            gripperList.append(robotGripper)
         db.add_all(gripperList)
         db.commit()
         return Result.success(message="insert successfully!")
@@ -222,14 +236,49 @@ def insertGripperList(db:Session,data_list:list[dict]):
         db.rollback()
         return Result.error(message=e)
 
-def selectCurrentGripper(db:Session,robotCode:str):
+
+def selectCurrentGripper(db: Session, robotCode: str):
     robot = db.scalar(select(Robot).where(Robot.robotCode == robotCode))
-    maxTimeSQL = (select(func.max(RobotGripper.createTime)).where(RobotGripper.robotId == robot.id).scalar_subquery())
-    robotGripper = db.scalar(select(RobotGripper).where(
-        and_(
-            RobotGripper.robotId == robot.id,
-            RobotGripper.createTime == maxTimeSQL
+    maxTimeSQL = (
+        select(func.max(RobotGripper.createTime))
+        .where(RobotGripper.robotId == robot.id)
+        .scalar_subquery()
+    )
+    robotGripper = db.scalar(
+        select(RobotGripper).where(
+            and_(
+                RobotGripper.robotId == robot.id, RobotGripper.createTime == maxTimeSQL
+            )
         )
-    ))
+    )
     result = orm_dict(robotGripper)
-    return Result.success_ws(data=result,message="select sucessfully!")
+    return Result.success_ws(data=result, message="select sucessfully!")
+
+
+async def push_data_loop(websocket, db_factory, robotCode, event):
+    while True:
+        await asyncio.sleep(1)
+        db = db_factory()
+        try:
+            if event == "rs":
+                result = selectReflectSensorList(db, robotCode)
+            elif event == "sonar":
+                result = selectSonarList(db, robotCode)
+            elif event == "pulses":
+                result = selectPulsesList(db, robotCode)
+            elif event == "neopixels":
+                result = selectNeopixelList(db, robotCode)
+            elif event == "gripper":
+                result = selectCurrentGripper(db, robotCode)
+            else:
+                continue
+
+            await websocket.send_json({**result, "event": event})
+        except asyncio.CancelledError:
+            print("data_push_loop task is canceled!")
+            raise    
+        except Exception as e:
+            print(e)   
+        finally:
+            db.close()
+        
