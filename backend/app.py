@@ -36,6 +36,22 @@ async def insertRobot(request:Request):
 def robotList(request:Request):
     return selectRobots(request=request)
 
+@app.get("/robot/BB016/sonar")
+def robotSonarList(request:Request):
+   db = SessionLocal()
+
+   robotCode = "BB016"
+   event = "sonar"
+
+   result = selectSonarList(db=db, robotCode=robotCode)
+
+   myResult = {
+      **result,
+      "event": event
+   }
+   
+   return myResult
+
 
 @app.websocket("/ws/robot")
 async def websocket_endpoint(websocket: WebSocket):
@@ -84,9 +100,17 @@ async def websocket_endpoint(websocket: WebSocket):
             else:
               result = {"error": "unknown event"}
             await websocket.send_json(myResult)
-        else:
+
+        if method == "POST" :
            event = data.get("event")
            data_list = list(data.get("data"))
+
+           for client in clients.copy():
+            try:
+               await client.send_json(data)
+            except websocket.ConnectionClosed:
+               clients.remove(client)
+
            if event == "rs":
               result = insertReflectiveSensors(db=db, sensor_list=data_list)
            elif event == "sonar":
@@ -99,11 +123,7 @@ async def websocket_endpoint(websocket: WebSocket):
               result = insertGripperList(db=db, data_list=data_list)
            else:
               result = {"error": "unknown event"}
-           for client in clients.copy():
-              try:
-               await client.send_json(data)
-              except websocket.ConnectionClosed:
-               clients.remove(client)
+           
          #   await websocket.send_json(result)
     except WebSocketDisconnect:
         manager.disconnect(websocket=websocket,topic="robot")
