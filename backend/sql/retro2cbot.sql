@@ -17,8 +17,11 @@ create table robot_sonar
             primary key,
     robot_id       bigint                              not null,
     sonar_distance real                                not null,
-    create_time    timestamp default CURRENT_TIMESTAMP not null
+    create_time    timestamp default CURRENT_TIMESTAMP not null,
+    direction      char
 );
+
+comment on column robot_sonar.direction is '0:front, 1:rigth,2:left';
 
 alter table robot_sonar
     owner to root;

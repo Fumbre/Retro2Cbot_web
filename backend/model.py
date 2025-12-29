@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger,Integer,String,Boolean,DateTime,Float,func,select,and_
+from sqlalchemy import BigInteger,Integer,CHAR,String,Boolean,DateTime,Float,func,select,and_
 from sqlalchemy.orm import Mapped,mapped_column
 from datetime import datetime
 from database import Base
@@ -38,6 +38,7 @@ class RobotSonar(Base):
     __tablename__ = "robot_sonar"
     id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotId:Mapped[int] = mapped_column("robot_id",BigInteger,nullable=False)
+    direction:Mapped[str] = mapped_column("direction",CHAR(1))
     sonarDistance:Mapped[float] = mapped_column("sonar_distance",Float,nullable=False)
     createTime:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
 
