@@ -2,19 +2,21 @@ import express from 'express';
 const router = express.Router();
 
 router.get('/reflective', async (req, res) => {
-  // const data = (await fetch(`${process.env.API_IP}:${process.env.API_PORT}/`)).json();
+  // const dataPython = (await fetch(`${process.env.API_IP}:${process.env.API_PORT}/`)).json();
+
+  // technicaly I can get last data from database making a request
   const data = {
-    id: '',
-    robotId: 'BB016',
-    a0: 174,
-    a1: 209,
-    a2: 201,
-    a3: 204,
-    a4: 194,
-    a5: 214,
-    a6: 214,
-    a7: 244,
-    currentStatus: '10000000'
+    robotCode: req.robotCode.toUpperCase(),
+    robotName: req.robotName,
+    a0: 0,
+    a1: 0,
+    a2: 0,
+    a3: 0,
+    a4: 0,
+    a5: 0,
+    a6: 0,
+    a7: 0,
+    currentStatus: '00000000'
   }
 
   // push to reflective sensor array every sensor data
@@ -25,8 +27,11 @@ router.get('/reflective', async (req, res) => {
 
   // console.log(data.currentStatus[0]);
 
+  const isLayout = req.query.html == 'true' ? false : 'layouts/layout';
+
   // console.log(data);
   return res.render('./Robot/Sensors/Reflective/reflective', {
+    layout: isLayout,
     title: 'Reflective Sensor',
     sensors: reflective_sensor_values,
     currentStatus: data.currentStatus,

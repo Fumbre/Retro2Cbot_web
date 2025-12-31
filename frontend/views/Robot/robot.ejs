@@ -1,0 +1,22 @@
+<section class="robots">
+    <div class="robots__contianer container">
+        <ul id="robotList" class="robots__list list">
+            <% for (item in data) {%>
+                <li data-robot="robots__<%= data[item].robotCode %>" class="robots__item">
+                    <h2 class="robots__title title">
+                        <%= data[item].robotName %>
+                    </h2>
+                    <p class="robots__name">
+                        Robot <%= data[item].robotName %> with personal code <%= data[item].robotCode %>
+                    </p>
+                    <img src="" alt="robot <%= data[item].robotCode %> photo">
+                    <h3>current Status:</h3>
+
+                    <div id="robots__status_<%=data[item].robotCode %>">
+
+                    </div>
+                </li>
+                <% }; %>
+        </ul>
+    </div>
+</section>

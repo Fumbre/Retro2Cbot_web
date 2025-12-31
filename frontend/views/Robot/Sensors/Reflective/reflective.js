@@ -3,15 +3,19 @@ import { ws } from '../../../../assets/scripts/main.js';
 import { ROBOTS, isRobot } from '../../../../assets/scripts/constants.js';
 import wsBus from '../../../../assets/scripts/wsBus.js';
 
-export function getReflectiveData(robotId) {
-    if (!isRobot(robotId))
-        return;
+let currentRobot;
+
+export function getReflectiveData() {
+    // if (!isRobot(robotId))
+    //     return;
+
+    console.log('reflect?')
 
     if (ws.readyState === WebSocket.OPEN) {
         wsBus.on('rs', (data) => {
             const dataParsed = JSON.parse(data)
             console.log("ws bus got rs data", dataParsed)
-            // updateReflectiveSensors(data);
+            updateReflectiveSensors(dataParsed.data);
         })
         // ws.send(JSON.stringify({
         //     event: "rs",
@@ -26,5 +30,25 @@ export function getReflectiveData(robotId) {
 
 
 function updateReflectiveSensors(data) {
+    const rsData = data[0];
+    const rsList = document.getElementById(`rsList__${rsData.robotCode}`);
+
+    // console.log(rsList);
+
+    for (let index = 0; index < rsList.childElementCount; index++) {
+        const item = rsList.querySelector(`[data-sensor="reflective_sensor__a${index}"]`)
+        const valueEl = item.querySelector('.reflective_sensor__value');
+
+        valueEl.textContent = rsData[`a${index}`];
+
+        valueEl.classList.remove('reflective_sensor__line_status0');
+        valueEl.classList.remove('reflective_sensor__line_status1');
+        valueEl.classList.add(`reflective_sensor__line_status${rsData.currentStatus.slice(index, index + 1)}`);
+
+        console.log(item);
+
+    }
+
+
 
 }

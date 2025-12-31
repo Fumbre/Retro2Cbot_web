@@ -36,6 +36,12 @@ async def insertRobot(request:Request):
 def robotList(request:Request):
     return selectRobots(request=request)
 
+# @app.get("/robot/{robot_id}/{event}")
+# def robot_sensor_list(
+#     robot_id: str,
+#     event: Literal["sonar", "reflective"]
+# ):
+
 @app.get("/robot/BB016/sonar")
 def robotSonarList(request:Request):
    db = SessionLocal()
