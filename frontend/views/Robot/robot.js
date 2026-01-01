@@ -1,4 +1,5 @@
 import './robot.sass'
+import { createGraphic } from './Sensors/Reflective/reflective.js';
 
 export async function getStatus() {
   const id16 = document.getElementById("robots__status_BB016");
@@ -13,4 +14,9 @@ export async function getStatus() {
   id16.innerHTML = test;
   id11.innerHTML = test1;
   id46.innerHTML = test2;
+
+  // when fetch robots create graphics (use loop)
+  createGraphic('BB016');
+  createGraphic('BB046');
+  createGraphic('BB011');
 }
