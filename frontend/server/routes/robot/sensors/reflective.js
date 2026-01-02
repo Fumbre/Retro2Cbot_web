@@ -30,7 +30,7 @@ router.get('/reflective', async (req, res) => {
   const isLayout = req.query.html == 'true' ? false : 'layouts/layout';
 
   // console.log(data);
-  return res.render('./Robot/Sensors/Reflective/reflective', {
+  return res.render('./Robots/Sensors/Reflective/reflective', {
     layout: isLayout,
     title: 'Reflective Sensor',
     sensors: reflective_sensor_values,

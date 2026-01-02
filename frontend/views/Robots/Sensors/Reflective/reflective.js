@@ -1,6 +1,6 @@
 import './reflective.sass'
 import { ws } from '../../../../assets/scripts/main.js';
-import { ROBOTS, isRobot } from '../../../../assets/scripts/constants.js';
+import { ROBOTS, isRobot } from '../../../../assets/scripts/api.js';
 import wsBus from '../../../../assets/scripts/wsBus.js';
 
 import * as echarts from 'echarts';
@@ -14,7 +14,7 @@ function getSeriesColor(i) {
         .trim();
 }
 
-export function getReflectiveData() {
+export function wsReflectiveData() {
     // if (!isRobot(robotId))
     //     return;
 
@@ -37,7 +37,7 @@ export function getReflectiveData() {
 }
 
 
-export function createGraphic(robotCode) {
+export function createReflectiveGraphic(robotCode) {
     const rsList = document.getElementById(`rsList__${robotCode}`);
 
     const rsId = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7'];
@@ -98,6 +98,8 @@ export function createGraphic(robotCode) {
         myChart.getOption().series.map(s => s.name)
     );
 
+    charts.set(robotCode, activeSeries);
+
     document.getElementById(`rsList__${robotCode}`).addEventListener('click', (e) => {
         const li = e.target.closest(`[data-series]`);
 
@@ -125,6 +127,9 @@ export function createGraphic(robotCode) {
 }
 
 // todo updateGraphic
+function updateGraphic(robotCode) {
+
+}
 
 
 // used every time when recieved data from socket

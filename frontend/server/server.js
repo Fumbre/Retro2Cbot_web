@@ -24,6 +24,7 @@ const manifest = JSON.parse(data);
 //api
 const robotRouter = (await import('./routes/robot/robot.js')).router;
 const reflectiveRouter = (await import('./routes/robot/sensors/reflective.js')).router;
+const apiRobots = (await import('./api/robots.js')).router;
 
 
 // console.log(process.env.DB_USERNAME);
@@ -54,6 +55,9 @@ app.get('/', (req, res) => {
 // use api
 app.use('/', robotRouter);
 app.use('/robot/:id/sensors', validateRobot, reflectiveRouter);
+
+// get robots
+app.use('/api/', apiRobots);
 
 // webSocket connection
 connectToRobotApi();

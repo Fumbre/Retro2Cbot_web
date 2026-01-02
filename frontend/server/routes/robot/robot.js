@@ -2,20 +2,17 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from "express"
 import { validateRobot } from '../../middleware/validateRobot.js';
+import { getRobots } from '../../api/robots.js';
 
 const router = express.Router();
 
 
-router.get('/robot', async (req, res) => {
+router.get('/robots', async (req, res) => {
     console.log(process.env.API_IP)
     try {
-        const robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
+        const robots = await getRobots();
 
-        if (robots.code != 200) {
-            throw new Error('code is not 200')
-        }
-
-        return res.render('./Robot/robot', {
+        return res.render('./Robots/robots', {
             title: "about robots",
             data: robots.data
         })
@@ -29,11 +26,15 @@ router.get('/robot', async (req, res) => {
 
 router.get('/robot/:id', validateRobot, async (req, res) => {
     try {
-        let robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
+        // let robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
 
-        const currentRobot = robots.data.filter((item) => item.robotCode.toLowerCase() == req.robotCode.toLowerCase())[0]
-        console.log(currentRobot)
-        return res.json(currentRobot)
+        // const currentRobot = robots.data.filter((item) => item.robotCode.toLowerCase() == req.robotCode.toLowerCase())[0]
+        // console.log(currentRobot)
+        // return res.render('Robot/robot', {
+        //     title: `${currentRobot.robotName} (${currentRobot.robotCode})`,
+        // })
+
+        return res.redirect('/')
     } catch (e) {
         console.error(e);
         return res.redirect('/')
