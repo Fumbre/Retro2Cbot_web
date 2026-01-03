@@ -155,6 +155,13 @@ def selectPulsesList(db: Session, robotCode: str):
     startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     dataList = []
+    # this part represent this SQL:
+    # select robot_pulses.id, robot_pulses.robot_id, robot_pulses.left_wheel_pulse, 
+    # robot_pulses.right_wheel_pulses, robot_pulses.create_time
+    # from robot_pulses
+    # inner join robots on robots.id = robot_pulses.robot_id
+    # where robot_pulses.create_time >= #{startDate} and robot_pulses.create_time < #{endDate} and robots.robot_code = #{robotCode}
+    # order by robot_pulses.create_time desc;
     result = db.scalars(
         select(RobotPulses)
         .join(Robot, Robot.id == RobotPulses.robotId)
@@ -167,7 +174,7 @@ def selectPulsesList(db: Session, robotCode: str):
         )
         .order_by(RobotPulses.createTime.desc())
     ).fetchall()
-
+     
     for data in result:
         pulse = orm_dict(data)
         dataList.append(pulse)
@@ -183,15 +190,15 @@ def insertNeopixels(db: Session, data_list: list[dict]):
         robotCode = data_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         for data in data_list:
-            id = getSnowFlakeId()
+            id = getSnowFlakeId() # get snowflake id
             neopixel = RobotNeopxiel(id=id, robotId=robot.id)
             dict_orm(data, neopixel)
             neopexielList.append(neopixel)
-        db.add_all(neopexielList)
-        db.commit()
+        db.add_all(neopexielList) # insert data, which data type is list[RobotNeopxiel]
+        db.commit() # submit transactions to the database (insert data into database really)
         return Result.success(message="insert successfully!")
     except Exception as e:
-        db.rollback()
+        db.rollback() # if there exists errors, it rollbacks the transaction for avoiding data of trush.
         return Result.error(message=e)
 
 
@@ -239,11 +246,23 @@ def insertGripperList(db: Session, data_list: list[dict]):
 
 def selectCurrentGripper(db: Session, robotCode: str):
     robot = db.scalar(select(Robot).where(Robot.robotCode == robotCode))
+    # subquery SQL:
+    # select max(create_time) from robot_gripper where robot_id = #{robotId}
     maxTimeSQL = (
         select(func.max(RobotGripper.createTime))
         .where(RobotGripper.robotId == robot.id)
         .scalar_subquery()
     )
+
+    #final SQL:
+    # select 
+    # * 
+    # from robot_gripper 
+    # where create_time = (select max(create_time)
+    # from robot_gripper 
+    # where robot_id = #{robotId})
+    #  and 
+    # robot_id = #{robotId}
     robotGripper = db.scalar(
         select(RobotGripper).where(
             and_(
@@ -257,7 +276,7 @@ def selectCurrentGripper(db: Session, robotCode: str):
 
 async def push_data_loop(websocket, db_factory, robotCode, event):
     while True:
-        await asyncio.sleep(1)
+        await asyncio.sleep(1) # async wait 1 second.
         db = db_factory()
         try:
             if event == "rs":
