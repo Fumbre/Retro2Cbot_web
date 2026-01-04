@@ -5,8 +5,10 @@ from database import Base
 
 
 
-class Robot(Base):
-    __tablename__ = "robots"
+class Robot(Base): # this class extend SQLAlchemy ORM class, which name is Base
+    __tablename__ = "robots" # build connection between ORM class and table in database
+    # get reflection between properties and columns.
+    # for example, id in ORM class, which data type is integer, reflects to id in table, which data type is Bigint, is primary key. 
     id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotName:Mapped[str] = mapped_column("robot_name",String,nullable=True)
     robotCode:Mapped[str] = mapped_column("robot_code",String,nullable=True)
