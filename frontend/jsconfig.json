@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@pages/*": [
+        "assets/scripts/pages/*"
+      ],
+      "@partials/*": [
+        "assets/scripts/partials/*"
+      ],
+      "@websocket/*": [
+        "assets/scripts/websocket/*"
+      ]
+    }
+  },
+  "include": [
+    "assets/scripts/**/*"
+  ]
+}

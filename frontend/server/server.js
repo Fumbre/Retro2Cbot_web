@@ -22,7 +22,7 @@ const manifest = JSON.parse(data);
 
 
 //api
-const robotRouter = (await import('./routes/robot/robot.js')).router;
+const robotRouter = (await import('./routes/robot/robots.js')).router;
 const reflectiveRouter = (await import('./routes/robot/sensors/reflective.js')).router;
 const apiRobots = (await import('./api/robots.js')).router;
 
@@ -48,7 +48,8 @@ app.set('layout', 'layouts/layout');
 
 app.get('/', (req, res) => {
   res.render('index', {
-    title: "Retro2Cbot"
+    title: "Retro2Cbot",
+    page: 'index',
   });
 });
 

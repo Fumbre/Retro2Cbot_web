@@ -1,0 +1,33 @@
+<section class="robots">
+    <div class="robots__contianer container">
+        <nav>
+            <ul>
+                <% for (i in data) {%>
+                    <li><a href="#robotCode__<%=data[i].robotCode%>">
+                            <%= data[i].robotName%> (<%= data[i].robotCode%>)
+                        </a></li>
+                    <%};%>
+            </ul>
+        </nav>
+
+        <ul id="robotList" class="robots__list list">
+            <% for (item in data) {%>
+                <li data-robot="robots__<%= data[item].robotCode %>" class="robots__item">
+                    <article id="robotCode__<%=data[item].robotCode%>">
+                        <h2 class="robots__title title">
+                            <%= data[item].robotName %> (<%= data[item].robotCode %>)
+                        </h2>
+                        <img src="" alt="robot <%= data[item].robotCode %> photo">
+                        <p class="robots__text">Last 24h <span class="robots__name">
+                                <%=data[item].robotName %>
+                            </span> status:</p>
+                        <!-- <a href=""send mock data></a> -->
+                        <div id="robots__status_<%=data[item].robotCode %>" class="robot__status">
+                            <%- include('../../partials/robot/Reflective/reflective', { data: data[item] } )%>
+                        </div>
+                </li>
+                </article>
+                <% }; %>
+        </ul>
+    </div>
+</section>

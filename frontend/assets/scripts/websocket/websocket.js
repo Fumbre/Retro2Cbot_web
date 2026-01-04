@@ -1,6 +1,6 @@
 import wsBus from "./wsBus.js";
 
-let ws;
+export let ws;
 let timeout;
 
 export function nodeWebsocket() {

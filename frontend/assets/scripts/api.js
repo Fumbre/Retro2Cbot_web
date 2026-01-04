@@ -9,3 +9,11 @@ export async function getRobots() {
 
   return await robots.json();
 }
+
+export async function hydrateModule(el) {
+  const url = el.dataset.endpoint;
+  if (!url) return;
+
+  const html = await fetch(`${url}/?partials=true`).then(r => r.text());
+  el.innerHTML = html;
+}

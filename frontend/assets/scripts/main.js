@@ -1,21 +1,24 @@
-import { el, mount } from "redom";
 import "../style/normalize.scss";
 import "../style/global.sass";
 import "../style/header.sass";
 import "../style/main.sass";
-import { nodeWebsocket } from "./websocket.js"
-import { createDOMRobots } from "../../views/Robots/robots.js";
+import { nodeWebsocket } from "@websocket/websocket"
+import { createReflectiveGraphic, wsReflectiveData } from "@partials/robot/Reflective/reflective";
 
 // TODO:
 // import "../style/footer.sass";
 
-export const ws = nodeWebsocket();
+// create node websocket
+nodeWebsocket();
 
-// use new script for /robot
-await createDOMRobots();
+const page = document.body.dataset.page;
 
-
-
-
-// await getRobot();
-
+// use new script for /robots
+if (page === 'robots' || page === 'reflective') {
+  try {
+    const { createDOMRobots } = await import("@pages/Robots/robots");
+    await createDOMRobots();
+  } catch (e) {
+    console.log(e)
+  }
+}

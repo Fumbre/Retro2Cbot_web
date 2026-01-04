@@ -8,10 +8,10 @@
         <%= title %>
     </title>
     <link rel="stylesheet" href="<%= assets['main.css'] %>">
-    <script defer src="<%= assets['main.js'] %>"></script>
+    <script type="module" src="<%= assets['main.js'] %>"></script>
 </head>
 
-<body>
+<body data-page="<%= page %>">
     <header class="header">
         <div class="container">
             <h1 class="visually-hidden">Retro2Cbot</h1>

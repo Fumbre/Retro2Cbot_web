@@ -1,12 +1,11 @@
 import './reflective.sass'
-import { ws } from '../../../../assets/scripts/main.js';
-import { ROBOTS, isRobot } from '../../../../assets/scripts/api.js';
-import wsBus from '../../../../assets/scripts/wsBus.js';
+import { ws } from '@websocket/websocket';
+import wsBus from '@websocket/wsBus';
 
 import * as echarts from 'echarts';
 const charts = new Map();
 
-let currentRobot;
+let reflectiveSubscribed = false;
 
 function getSeriesColor(i) {
     return getComputedStyle(document.documentElement)
@@ -15,10 +14,12 @@ function getSeriesColor(i) {
 }
 
 export function wsReflectiveData() {
-    // if (!isRobot(robotId))
-    //     return;
+    // subscribe only once
+    if (ws.readyState === WebSocket.CLOSED)
+        reflectiveSubscribed = false;
 
-    console.log('reflect?')
+    if (reflectiveSubscribed) return;
+    reflectiveSubscribed = true;
 
     if (ws.readyState === WebSocket.OPEN) {
         wsBus.on('rs', (data) => {
@@ -26,23 +27,19 @@ export function wsReflectiveData() {
             console.log("ws bus got rs data", dataParsed)
             updateReflectiveSensors(dataParsed.data);
         })
-        // ws.send(JSON.stringify({
-        //     event: "rs",
-        //     method: "GET",
-        //     robotCode: robotId
-        // }));
     }
-
-    // ws.send(JSON.stringify({ test: "test" }))
+    // ws.send(JSON.stringify({
+    //     event: "rs",
+    //     method: "GET",
+    //     robotCode: robotId
+    // }));
 }
 
 
-export function createReflectiveGraphic(robotCode) {
-    const rsList = document.getElementById(`rsList__${robotCode}`);
-
+export function createReflectiveGraphic(root, robotName, robotCode) {
     const rsId = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7'];
 
-    const graphEl = rsList.parentElement.querySelector(".reflective_sensor__graph");
+    const graphEl = root.parentElement.querySelector(".reflective_sensor__graph");
 
 
     var myChart = echarts.init(graphEl);
@@ -51,7 +48,7 @@ export function createReflectiveGraphic(robotCode) {
     option = {
         title: {
             text: 'Reflective data',
-            subtext: `${robotCode}`
+            subtext: `${robotName} (${robotCode})`
         },
         tooltip: {
             trigger: 'axis'
@@ -152,7 +149,5 @@ function updateReflectiveSensors(data) {
         console.log(item);
 
     }
-
-
 
 }
