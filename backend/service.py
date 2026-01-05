@@ -78,7 +78,7 @@ def selectReflectSensorList(db: Session, robotCode: str):
                 ReflectiveSensor.createTime < endDate,
             )
         )
-        .order_by(ReflectiveSensor.createTime.desc())
+        .order_by(ReflectiveSensor.createTime.asc())
     ).fetchall()
     resultList = []
     for reflectiveSensor in dataList:
@@ -122,7 +122,7 @@ def selectSonarList(db: Session, robotCode: str):
                 RobotSonar.createTime < endDate,
             )
         )
-        .order_by(RobotSonar.createTime.desc())
+        .order_by(RobotSonar.createTime.asc())
     ).fetchall()
 
     for sonar in list:
@@ -161,7 +161,7 @@ def selectPulsesList(db: Session, robotCode: str):
     # from robot_pulses
     # inner join robots on robots.id = robot_pulses.robot_id
     # where robot_pulses.create_time >= #{startDate} and robot_pulses.create_time < #{endDate} and robots.robot_code = #{robotCode}
-    # order by robot_pulses.create_time desc;
+    # order by robot_pulses.create_time asc;
     result = db.scalars(
         select(RobotPulses)
         .join(Robot, Robot.id == RobotPulses.robotId)
@@ -172,7 +172,7 @@ def selectPulsesList(db: Session, robotCode: str):
                 Robot.robotCode == robotCode,
             )
         )
-        .order_by(RobotPulses.createTime.desc())
+        .order_by(RobotPulses.createTime.asc())
     ).fetchall()
      
     for data in result:
@@ -216,7 +216,7 @@ def selectNeopixelList(db: Session, robotCode: str):
                 Robot.robotCode == robotCode,
             )
         )
-        .order_by(RobotNeopxiel.createTime.desc())
+        .order_by(RobotNeopxiel.createTime.asc())
     ).fetchall()
     for data in result:
         neopixel = orm_dict(data)
