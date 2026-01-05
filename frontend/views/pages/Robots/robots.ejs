@@ -23,7 +23,8 @@
                                 <%=data[item].robotName %>
                             </span> status:</p>
                         <!-- <a href=""send mock data></a> -->
-                        <%- include('../../partials/robot/Reflective/reflective', { data: data[item] } )%>
+                        <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
+                            data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
                 </li>
                 </article>
                 <% }; %>

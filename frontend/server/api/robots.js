@@ -23,19 +23,36 @@ async function getRobots() {
 }
 
 
-async function getRSData(robotName) {
+async function getRSData(robotCode) {
   try {
-    const robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
+    const robotSensor = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots/${robotCode}/rs`)).json();
 
-    if (robots.code != 200) {
-      console.error('Get robots code is not 200')
-      return robots
+    if (robotSensor.code != 200) {
+      console.error('Get robotSensor code is not 200')
+      return robotSensor
     }
 
-    return robots;
+    return robotSensor.data;
   } catch (e) {
     return e
   }
 }
 
-export { router, getRobots };
+async function getLastRSData(robotCode) {
+  try {
+    const robotSensor = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots/${robotCode}/rs`)).json();
+
+    if (robotSensor.code != 200) {
+      console.error('Get robotSensor code is not 200')
+      return robotSensor
+    }
+
+    const lastUpdatedSensor = robotSensor.data.length ? robotSensor.data[robotSensor.data.length - 1] : []
+
+    return lastUpdatedSensor;
+  } catch (e) {
+    return e
+  }
+}
+
+export { router, getRobots, getRSData, getLastRSData };
