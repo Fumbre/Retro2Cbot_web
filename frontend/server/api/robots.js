@@ -22,4 +22,20 @@ async function getRobots() {
   }
 }
 
+
+async function getRSData(robotName) {
+  try {
+    const robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
+
+    if (robots.code != 200) {
+      console.error('Get robots code is not 200')
+      return robots
+    }
+
+    return robots;
+  } catch (e) {
+    return e
+  }
+}
+
 export { router, getRobots };

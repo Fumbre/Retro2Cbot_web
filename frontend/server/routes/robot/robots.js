@@ -16,7 +16,7 @@ router.get('/robots', async (req, res) => {
             title: "about robots",
             page: "robots",
             data: robots.data,
-            sensors: [23, 21, 234, 23, 239, 124, 234, 23],
+            sensors: [203, 21, 234, 23, 239, 124, 234, 23],
             currentStatus: '10011110'
         })
     } catch (e) {

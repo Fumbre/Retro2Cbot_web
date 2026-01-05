@@ -26,6 +26,7 @@ export function wsReflectiveData() {
             const dataParsed = JSON.parse(data)
             console.log("ws bus got rs data", dataParsed)
             updateReflectiveSensors(dataParsed.data);
+            updateGraphic(dataParsed.data)
         })
     }
     // ws.send(JSON.stringify({
@@ -124,8 +125,11 @@ export function createReflectiveGraphic(root, robotName, robotCode) {
 }
 
 // todo updateGraphic
-function updateGraphic(robotCode) {
-
+function updateGraphic(data) {
+    const rsData = data[0];
+    const rsElement = document.querySelector(`.reflective_sensor[data-robot-code=${rsData.robotCode}]`);
+    const rsGraphEl = rsElement.querySelector('.reflective_sensor__graph');
+    console.log(rsGraphEl)
 }
 
 
@@ -145,9 +149,6 @@ function updateReflectiveSensors(data) {
         valueEl.classList.remove('reflective_sensor__line_status0');
         valueEl.classList.remove('reflective_sensor__line_status1');
         valueEl.classList.add(`reflective_sensor__line_status${rsData.currentStatus.slice(index, index + 1)}`);
-
-        console.log(item);
-
     }
 
 }
