@@ -79,12 +79,6 @@ async def websocket_endpoint(websocket: WebSocket):
            event = data.get("event")
            data_list = list(data.get("data"))
 
-           for client in clients.copy():
-            try:
-               await client.send_json(data)
-            except websocket.ConnectionClosed:
-               clients.remove(client)
-
            if event == "rs":
               result = insertReflectiveSensors(db=db, sensor_list=data_list)
            elif event == "sonar":
@@ -97,6 +91,12 @@ async def websocket_endpoint(websocket: WebSocket):
               result = insertGripperList(db=db, data_list=data_list)
            else:
               result = {"error": "unknown event"}
+
+           for client in clients.copy():
+             try:
+               await client.send_json(result)
+             except websocket.ConnectionClosed:
+               clients.remove(client)  
            
          #   await websocket.send_json(result)
     except WebSocketDisconnect:

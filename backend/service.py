@@ -52,14 +52,15 @@ def insertReflectiveSensors(db: Session, sensor_list: list[dict]):
         robotCode = sensor_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sensors = []
+        id = getSnowFlakeId()
         for sensor in sensor_list:
-            id = getSnowFlakeId()
             rs = ReflectiveSensor(id=id, robotId=robot.id)
             dict_orm(sensor, rs)
             sensors.append(rs)
         db.add_all(sensors)
         db.commit()
-        return Result.success(message="insert sucess!")
+        out =  db.scalar(select(ReflectiveSensor).where(ReflectiveSensor.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
@@ -94,14 +95,15 @@ def insertRobotSonarData(db: Session, list: list[dict]):
         robotCode = list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sonars = []
+        id = getSnowFlakeId()
         for sonar in list:
-            id = getSnowFlakeId()
             data = RobotSonar(id=id, robotId=robot.id)
             dict_orm(sonar, data)
             sonars.append(data)
         db.add_all(sonars)
         db.commit()
-        return Result.success(message="insert success!")
+        out = db.scalar(select(RobotSonar).where(RobotSonar.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
@@ -138,14 +140,15 @@ def insertRobotPulses(db: Session, list: list[dict]):
         robotCode = list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         pulsesList = []
+        id = getSnowFlakeId()
         for data in list:
-            id = getSnowFlakeId()
             pulses = RobotPulses(id=id, robotId=robot.id)
             dict_orm(data, pulses)
             pulsesList.append(pulses)
         db.add_all(pulsesList)
         db.commit()
-        return Result.success(message="insert successfully!")
+        out = db.scalar(select(RobotPulses).where(RobotPulses.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
@@ -189,14 +192,15 @@ def insertNeopixels(db: Session, data_list: list[dict]):
         neopexielList = []
         robotCode = data_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
+        id = getSnowFlakeId() # get snowflake id
         for data in data_list:
-            id = getSnowFlakeId() # get snowflake id
             neopixel = RobotNeopxiel(id=id, robotId=robot.id)
             dict_orm(data, neopixel)
             neopexielList.append(neopixel)
         db.add_all(neopexielList) # insert data, which data type is list[RobotNeopxiel]
         db.commit() # submit transactions to the database (insert data into database really)
-        return Result.success(message="insert successfully!")
+        out = db.scalar(select(RobotNeopxiel).where(RobotNeopxiel.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback() # if there exists errors, it rollbacks the transaction for avoiding data of trush.
         return Result.error(message=e)
@@ -231,14 +235,15 @@ def insertGripperList(db: Session, data_list: list[dict]):
         robotCode = data_list[0].get("robotCode")
         gripperList = []
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
+        id = getSnowFlakeId()
         for data in data_list:
-            id = getSnowFlakeId()
             robotGripper = RobotGripper(id=id, robotId=robot.id)
             dict_orm(data, robotGripper)
             gripperList.append(robotGripper)
         db.add_all(gripperList)
         db.commit()
-        return Result.success(message="insert successfully!")
+        out = db.scalar(select(RobotGripper).where(RobotGripper.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
