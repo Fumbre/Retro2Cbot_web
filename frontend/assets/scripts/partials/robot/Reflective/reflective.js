@@ -3,6 +3,7 @@ import wsBus from '@websocket/wsBus';
 
 import * as echarts from 'echarts';
 const charts = new Map();
+const buffers = {};
 
 let reflectiveSubscribed = false;
 
@@ -65,27 +66,35 @@ export function createReflectiveGraphic(root, robotName, robotCode) {
         yAxis: {
             type: 'value'
         },
-        series: rsId.map((id, i) => ({
-            name: id,
-            type: 'line',
-            data: [234 * i, 234, 124, 994, 223 * i, 253, 252], // use fetch api in node js for createatin first data
-            lineStyle: {
-                color: getSeriesColor(i),
-            },
-            itemStyle: {
-                color: getSeriesColor(i),
-            },
-        }))
+        series: rsId.map((id, i) => {
+            buffers[id] = [234 * i, 234, 124, 994, 223 * i, 253, 252];
+
+            return ({
+                name: id,
+                type: 'line',
+                data: buffers[id], // use fetch api in node js for createatin first data
+                lineStyle: {
+                    color: getSeriesColor(i),
+                },
+                itemStyle: {
+                    color: getSeriesColor(i),
+                },
+            })
+        }
+        )
     };
 
 
-    option && myChart.setOption(option);
+    myChart.setOption(option);
 
-    const activeSeries = new Set(
-        myChart.getOption().series.map(s => s.name)
-    );
 
-    charts.set(robotCode, activeSeries);
+    const activeSeries = new Set(rsId); // to get id's for series 
+
+    charts.set(robotCode, {
+        chart: myChart,
+        buffers,
+        activeSeries
+    });
 
     document.getElementById(`rsList__${robotCode}`).addEventListener('click', (e) => {
         const li = e.target.closest(`[data-series]`);
@@ -116,9 +125,23 @@ export function createReflectiveGraphic(root, robotName, robotCode) {
 // todo updateGraphic
 function updateGraphic(data) {
     const rsData = data[0];
-    const rsElement = document.querySelector(`.reflective_sensor[data-robot-code=${rsData.robotCode}]`);
-    const rsGraphEl = rsElement.querySelector('.reflective_sensor__graph');
-    console.log(rsGraphEl)
+
+    const entry = charts.get(rsData.robotCode);
+    if (!entry) return;
+
+    const { chart, buffers } = entry;
+
+    for (const key in buffers) {
+        buffers[key].push(rsData[key]);
+        buffers[key].shift();
+    }
+
+    chart.setOption({
+        series: Object.entries(buffers).map(([key, arr]) => ({
+            name: key,
+            data: arr
+        }))
+    });
 }
 
 

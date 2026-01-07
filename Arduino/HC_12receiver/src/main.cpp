@@ -19,16 +19,16 @@ void buildReflectiveJson()
 
   data["robotCode"] = "BB016";
 
-  data["a0"] = 334;
-  data["a1"] = 234;
-  data["a2"] = 434;
-  data["a3"] = 534;
-  data["a4"] = 634;
-  data["a5"] = 434;
-  data["a6"] = 134;
-  data["a7"] = 234;
+  data["a0"] = random(0, 1024);
+  data["a1"] = random(0, 1024);
+  data["a2"] = random(0, 1024);
+  data["a3"] = random(0, 1024);
+  data["a4"] = random(0, 1024);
+  data["a5"] = random(0, 1024);
+  data["a6"] = random(0, 1024);
+  data["a7"] = random(0, 1024);
 
-  data["currentStatus"] = "00011000";
+  data["currentStatus"] = "10011001";
 }
 
 void setup()
