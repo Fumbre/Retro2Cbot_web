@@ -5,6 +5,7 @@ import bus from './bus.js';
 export const clients = new Map();
 
 export function initWSS(server) {
+
   const wss = new WebSocketServer({ server, path: '/ws' });
 
   wss.on('connection', (ws, req) => {

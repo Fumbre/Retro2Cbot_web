@@ -1,14 +1,14 @@
 #include "websocket.h"
 
 WebSocketsClient websocketClient;
-char *serverIP = "retro2cbot-web-dugz.onrender.com";
-int port = 443;
-char *url = "/ws/robot";
+char *serverIP = "192.168.137.148";
+int port = 8081;
+char *url = "/ws";
 bool wsConnected = false;
 
 bool connectWebsocket()
 {
-    websocketClient.begin(serverIP, port, url, "https");
+    websocketClient.begin(serverIP, port, url);
     websocketClient.onEvent(webSocketEvent);
     websocketClient.setReconnectInterval(2000);
     return wsConnected;

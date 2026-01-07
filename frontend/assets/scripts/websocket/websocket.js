@@ -5,7 +5,9 @@ let timeout;
 
 export function nodeWebsocket() {
   if (!ws || ws.readyState === WebSocket.CLOSED) {
-    ws = new WebSocket(`ws://${window.location.host}/ws`);
+    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+
+    ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
 
     ws.onmessage = (e) => {
       const dataParsed = JSON.parse(e.data)

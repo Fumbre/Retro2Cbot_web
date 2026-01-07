@@ -1,7 +1,9 @@
 #include "Wificonnector.h"
 
-const char *ssid = "iotroam";
-const char *password = "LMalAeR0s3";
+// const char *ssid = "iotroam";
+// const char *password = "LMalAeR0s3";
+const char *ssid = "weatherStation";
+const char *password = "Whszxc1223??";
 
 int count = 0;
 
