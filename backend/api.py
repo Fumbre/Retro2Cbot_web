@@ -2,6 +2,7 @@ from fastapi import APIRouter,Request
 from service import insertRobots,selectRobots
 from database import SessionLocal
 from service import selectCurrentGripper,selectNeopixelList,selectPulsesList,selectReflectSensorList,selectSonarList
+from dataService import selectNewNeopixelData,selectNewGripperData,selectNewPulsesData,selectNewRSData,selectNewSonarData
 
 router = APIRouter()
 
@@ -60,4 +61,24 @@ def selectDataList(robotCode:str,event:str):
             **result,
              "event": event
             }
-    return myResult;    
+    return myResult
+
+
+@router.get("/robots/newdata/{robotCode}/{event}")
+def getNewData(robotCode:str,event:str):
+    db = SessionLocal()
+    if event == "rs":
+        result = selectNewRSData(db=db,robotCode=robotCode)
+    elif event == "sonar":
+        result = selectNewSonarData(db=db, robotCode=robotCode)
+    elif event == "neopixel":
+        result = selectNeopixelList(db=db, robotCode= robotCode)
+    elif event == "pulses":
+        result = selectNewPulsesData(db=db,robotCode=robotCode)
+    elif event == "gripper":
+        result = selectNewGripperData(db=db, robotCode=robotCode)
+    myResult = {
+            **result,
+            "event":event
+        }
+    return myResult    
