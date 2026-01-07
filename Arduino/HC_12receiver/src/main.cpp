@@ -18,15 +18,15 @@ void loop()
 {
   websocketLoop();
   String data = receiveDataFromHC12();
-  if(!data.isEmpty()){
-    Serial.println(data);
-    //deal with data
-    deserializeJson(doc,data);
-    if(doc["type"] == "outside"){
-      doc.remove("type");
-      String newData;
-      serializeJson(doc,newData);
-      sendData(newData);
-    }
-  }
+  // if(!data.isEmpty()){
+  //   Serial.println(data);
+  //   //deal with data
+  //   deserializeJson(doc,data);
+  //   if(doc["type"] == "outside"){
+  //     doc.remove("type");
+  //     String newData;
+  //     serializeJson(doc,newData);
+  //     sendData(newData);
+  //   }
+  // }
 }

@@ -9,7 +9,7 @@ router.get('/robots', async (req, res) => {
 
 async function getRobots() {
   try {
-    const robots = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots`)).json();
+    const robots = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots`)).json();
 
     if (robots.code != 200) {
       console.error('Get robots code is not 200')
@@ -25,7 +25,7 @@ async function getRobots() {
 
 async function getRSData(robotCode) {
   try {
-    const robotSensor = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots/${robotCode}/rs`)).json();
+    const robotSensor = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/${robotCode}/rs`)).json();
 
     if (robotSensor.code != 200) {
       console.error('Get robotSensor code is not 200')
@@ -40,7 +40,7 @@ async function getRSData(robotCode) {
 
 async function getLastRSData(robotCode) {
   try {
-    const robotSensor = await (await fetch(`http://${process.env.API_IP}:${process.env.API_PORT}/robots/${robotCode}/rs`)).json();
+    const robotSensor = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/${robotCode}/rs`)).json();
 
     if (robotSensor.code != 200) {
       console.error('Get robotSensor code is not 200')

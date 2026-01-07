@@ -8,7 +8,7 @@ const router = express.Router();
 
 
 router.get('/robots', async (req, res) => {
-    console.log(process.env.API_IP)
+    // console.log(process.env.API_IP)
     try {
         const robots = await getRobots();
 

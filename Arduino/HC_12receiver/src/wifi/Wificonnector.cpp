@@ -1,20 +1,23 @@
 #include "Wificonnector.h"
 
-const char* ssid = "weatherStation";
-const char* password = "Whszxc1223??";
+const char *ssid = "iotroam";
+const char *password = "LMalAeR0s3";
 
-int count  = 0;
+int count = 0;
 
-void connectWifi(){
+void connectWifi()
+{
     Serial.print("try to connect Wi-Fi: ");
     Serial.println(ssid);
-    WiFi.begin(ssid,password);
+    WiFi.begin(ssid, password);
 
-    while(WiFi.status() != WL_CONNECTED){
+    while (WiFi.status() != WL_CONNECTED)
+    {
         Serial.print(".");
         count++;
         delay(500);
-        if(count >= 2000){
+        if (count >= 2000)
+        {
             Serial.println("Wifi connected failed!!");
             return;
         }
@@ -23,5 +26,6 @@ void connectWifi(){
     Serial.println("");
     Serial.println("WIFI connected!");
     Serial.print("IP: ");
+    delay(500);
     Serial.println(WiFi.localIP());
 }
