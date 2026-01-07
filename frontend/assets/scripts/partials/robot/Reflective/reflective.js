@@ -1,5 +1,4 @@
 import './reflective.sass'
-import { ws } from '@websocket/websocket';
 import wsBus from '@websocket/wsBus';
 
 import * as echarts from 'echarts';
@@ -15,25 +14,15 @@ function getSeriesColor(i) {
 
 export function wsReflectiveData() {
     // subscribe only once
-    if (ws.readyState === WebSocket.CLOSED)
-        reflectiveSubscribed = false;
-
     if (reflectiveSubscribed) return;
     reflectiveSubscribed = true;
 
-    if (ws.readyState === WebSocket.OPEN) {
-        wsBus.on('rs', (data) => {
-            const dataParsed = JSON.parse(data)
-            console.log("ws bus got rs data", dataParsed)
-            updateReflectiveSensors(dataParsed.data);
-            updateGraphic(dataParsed.data)
-        })
-    }
-    // ws.send(JSON.stringify({
-    //     event: "rs",
-    //     method: "GET",
-    //     robotCode: robotId
-    // }));
+    wsBus.on('rs', (data) => {
+        const dataParsed = JSON.parse(data);
+        console.log("ws bus got rs data", dataParsed);
+        updateReflectiveSensors(dataParsed.data);
+        updateGraphic(dataParsed.data);
+    });
 }
 
 
