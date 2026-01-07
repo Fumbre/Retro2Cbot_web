@@ -8,7 +8,9 @@ let intervalId = null;
 export function connectToRobotApi() {
 	if (wsApi) return wsApi;
 
-	wsApi = new WebSocket(`ws://${process.env.API_URL}/ws/robot`);
+	const wsProtocol = process.env.API_PROTOCOL === "HTTPS" ? "wss" : "ws";
+
+	wsApi = new WebSocket(`${wsProtocol}://${process.env.API_URL}/ws/robot`);
 
 	wsApi.on("open", () => {
 		console.log("im here")
