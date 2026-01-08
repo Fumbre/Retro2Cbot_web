@@ -30,7 +30,7 @@ wss.on('connection', (client) => {
 
   client.on('message', (data) => {
     const parsedData = JSON.parse(data)
-    parsedData.data = [parsedData.data]
+    parsedData.data = parsedData.data
     console.log('From Arduino:', parsedData);
 
     if (remoteWS?.readyState === WebSocket.OPEN) {

@@ -1,7 +1,7 @@
 #include "websocket.h"
 
 WebSocketsClient websocketClient;
-char *serverIP = "192.168.137.148";
+char *serverIP = "192.168.137.1";
 int port = 8081;
 char *url = "/ws";
 bool wsConnected = false;

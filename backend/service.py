@@ -192,8 +192,8 @@ def insertNeopixels(db: Session, data_list: list[dict]):
         neopexielList = []
         robotCode = data_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
-        id = getSnowFlakeId() # get snowflake id
         for data in data_list:
+            id = getSnowFlakeId() # get snowflake id
             neopixel = RobotNeopxiel(id=id, robotId=robot.id)
             dict_orm(data, neopixel)
             neopexielList.append(neopixel)

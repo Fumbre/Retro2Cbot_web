@@ -12,10 +12,10 @@ void buildHC12Connection()
 
 String receiveDataFromHC12()
 {
-    String data;
+    String data = "";
     if (hc12.available())
     {
-        data = hc12.readString();
+        data = hc12.readStringUntil('\n');
     }
     return data;
 }
