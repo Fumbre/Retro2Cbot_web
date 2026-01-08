@@ -4,9 +4,9 @@
 #include "hc12/hc12recive.h"
 #include <ArduinoJson.h>
 
-// JsonDocument doc;
+JsonDocument doc;
 
-StaticJsonDocument<256> doc;
+// StaticJsonDocument<256> doc;
 
 void setup()
 {

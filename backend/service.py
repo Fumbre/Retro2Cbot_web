@@ -95,8 +95,8 @@ def insertRobotSonarData(db: Session, list: list[dict]):
         robotCode = list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sonars = []
-        id = getSnowFlakeId()
         for sonar in list:
+            id = getSnowFlakeId()
             data = RobotSonar(id=id, robotId=robot.id)
             dict_orm(sonar, data)
             sonars.append(data)
