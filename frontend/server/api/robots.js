@@ -1,11 +1,19 @@
 import express from 'express';
+import { validateRobot } from '../middleware/validateRobot.js';
 const router = express.Router();
 
 router.get('/robots', async (req, res) => {
   const data = await getRobots()
   console.log('this is from api/robots node', data);
   return res.json(data);
+});
+
+router.get('/robots/:id/rs', validateRobot, async (req, res) => {
+  const data = await getRSData(req.params["id"])
+  console.log('this is from api/robots/:id/rs node', data);
+  return res.json(data);
 })
+
 
 async function getRobots() {
   try {
@@ -40,18 +48,16 @@ async function getRSData(robotCode) {
 
 async function getLastRSData(robotCode) {
   try {
-    const robotSensor = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/${robotCode}/rs`)).json();
+    const robotSensor = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/newdata/${robotCode}/rs`)).json();
 
     if (robotSensor.code != 200) {
-      console.error('Get robotSensor code is not 200')
-      return robotSensor
+      console.error('Get robotSensor code is not 200 in getLastRSData')
+      throw new Error("robotSensor code is not 200 in getLastRSData");
     }
 
-    const lastUpdatedSensor = robotSensor.data.length ? robotSensor.data[robotSensor.data.length - 1] : []
-
-    return lastUpdatedSensor;
+    return robotSensor.data;
   } catch (e) {
-    return e
+    return [];
   }
 }
 

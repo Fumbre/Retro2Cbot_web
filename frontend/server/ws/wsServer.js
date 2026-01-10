@@ -3,6 +3,7 @@ import { wsApi } from "./wsClient.js"
 import bus from './bus.js';
 
 export const clients = new Map();
+let apiSubscribed = false;
 
 export function initWSS(server) {
 
@@ -31,11 +32,21 @@ export function initWSS(server) {
     ws.send(JSON.stringify({ ping: 'connected for first time' }));
   });
 
-  bus.on('apiResponse', (data) => {
-    const dataParsed = JSON.parse(data)
-    console.log("node.js send data to front: ", dataParsed)
-    wss.clients.forEach(ws => ws.send(JSON.stringify(dataParsed)));
-  });
+  if (!apiSubscribed) {
+    apiSubscribed = true;
+
+    bus.on('apiResponse', (data) => {
+      const dataParsed = JSON.parse(data);
+      console.log("node.js send data to front:", dataParsed);
+
+      wss.clients.forEach(ws => {
+        if (ws.readyState === ws.OPEN) {
+          ws.send(JSON.stringify(dataParsed));
+        }
+      });
+    });
+  }
+
 }
 
 

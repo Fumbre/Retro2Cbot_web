@@ -5,6 +5,7 @@ import * as echarts from 'echarts';
 const charts = new Map();
 const buffers = {};
 
+const MAX_CHAR_DATA = 30;
 let reflectiveSubscribed = false;
 
 function getSeriesColor(i) {
@@ -27,7 +28,11 @@ export function wsReflectiveData() {
 }
 
 
-export function createReflectiveGraphic(root, robotName, robotCode) {
+export async function createReflectiveGraphic(root, robotName, robotCode) {
+    const rsData = await (await fetch(`api/robots/${robotCode}/rs`)).json();
+
+    // to do cut data somehow and put it to graphic
+    console.log(rsData);
     const rsId = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7'];
 
     const graphEl = root.parentElement.querySelector(".reflective_sensor__graph");
@@ -133,7 +138,9 @@ function updateGraphic(data) {
 
     for (const key in buffers) {
         buffers[key].push(rsData[key]);
-        buffers[key].shift();
+        if (buffers[key].length > MAX_CHAR_DATA) {
+            buffers[key].shift();
+        }
     }
 
     chart.setOption({

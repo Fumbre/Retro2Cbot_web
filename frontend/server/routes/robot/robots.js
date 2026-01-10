@@ -15,19 +15,20 @@ router.get('/robots', async (req, res) => {
 
         await Promise.all(
             robots.data.map(async (robot) => {
+
                 robot.sensorsReflective = [];
-                const data = await getLastRSData(robot.robotCode);
-                // console.log('aaaaaaaaaaaaaaaaaaa: ', data);
+                const rsLastData = await getLastRSData(robot.robotCode);
+
+
                 for (let index = 0; index < 8; index++) {
-                    const element = data[`a${index}`] || 0;
+                    const element = rsLastData[`a${index}`] || 0;
                     robot.sensorsReflective.push(element)
                 }
-                robot.reflectiveStatus = data.currentStatus || '00000000';
+                robot.reflectiveStatus = rsLastData.currentStatus || '00000000';
 
             })
         );
 
-        console.log(robots.data);
 
         // for (let index = 0; index < robots.data.length; index++) {
         //     const item = robots.data[index];
