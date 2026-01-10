@@ -5,7 +5,8 @@ const wss = new WebSocket.Server({
   path: '/ws'
 });
 
-const REMOTE_WS_URL = 'wss://retro2cbot-web-dugz.onrender.com/ws/robot';
+// const REMOTE_WS_URL = 'wss://retro2cbot-web-dugz.onrender.com/ws/robot';
+const REMOTE_WS_URL = 'ws://127.0.0.1:8080/ws/robot';
 let remoteWS = null;
 
 function connectRemote() {

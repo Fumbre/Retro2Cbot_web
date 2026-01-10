@@ -47,7 +47,7 @@ void loop()
 {
   websocketLoop();
 
-  if (millis() - lastSend > 1000)
+  if (millis() - lastSend > 500)
   {
     lastSend = millis();
 
