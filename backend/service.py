@@ -105,6 +105,7 @@ def insertRobotSonarData(db: Session, list: list[dict]):
         out = db.scalar(select(RobotSonar).where(RobotSonar.id == id))
         return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 
@@ -150,6 +151,7 @@ def insertRobotPulses(db: Session, list: list[dict]):
         out = db.scalar(select(RobotPulses).where(RobotPulses.id == id))
         return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 

@@ -2,11 +2,7 @@
 #include "wifi/Wificonnector.h"
 #include "websocket/websocket.h"
 #include "hc12/hc12recive.h"
-#include <ArduinoJson.h>
-
-JsonDocument doc;
-
-// StaticJsonDocument<256> doc;
+#include "dataservice/data.h"
 
 void setup()
 {
@@ -20,15 +16,11 @@ void loop()
 {
   websocketLoop();
   String data = receiveDataFromHC12();
-
-  if(!data.isEmpty()){
-    // Serial.println(data);
-    //deal with data
-    deserializeJson(doc,data);
-    if(doc["type"] == "outside"){
-      doc.remove("type");
-      String newData;
-      serializeJson(doc,newData);
+  if (!data.isEmpty())
+  {
+    String newData = dealwithData(data);
+    if (data.length() != 0)
+    {
       Serial.println(newData);
       sendData(newData);
     }
