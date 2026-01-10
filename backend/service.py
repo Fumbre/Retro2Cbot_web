@@ -95,8 +95,8 @@ def insertRobotSonarData(db: Session, list: list[dict]):
         robotCode = list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sonars = []
-        id = getSnowFlakeId()
         for sonar in list:
+            id = getSnowFlakeId()
             data = RobotSonar(id=id, robotId=robot.id)
             dict_orm(sonar, data)
             sonars.append(data)
@@ -105,6 +105,7 @@ def insertRobotSonarData(db: Session, list: list[dict]):
         out = db.scalar(select(RobotSonar).where(RobotSonar.id == id))
         return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 
@@ -150,6 +151,7 @@ def insertRobotPulses(db: Session, list: list[dict]):
         out = db.scalar(select(RobotPulses).where(RobotPulses.id == id))
         return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 
@@ -192,8 +194,8 @@ def insertNeopixels(db: Session, data_list: list[dict]):
         neopexielList = []
         robotCode = data_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
-        id = getSnowFlakeId() # get snowflake id
         for data in data_list:
+            id = getSnowFlakeId() # get snowflake id
             neopixel = RobotNeopxiel(id=id, robotId=robot.id)
             dict_orm(data, neopixel)
             neopexielList.append(neopixel)

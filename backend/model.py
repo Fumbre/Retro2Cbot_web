@@ -30,7 +30,7 @@ class ReflectiveSensor(Base):
 
 class RobotPulses(Base):
     __tablename__ = "robot_pulses"
-    id:Mapped[int] = mapped_column("id",primary_key=True,autoincrement=False)
+    id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotId:Mapped[int] = mapped_column("robot_id",BigInteger,nullable=False)
     leftWheelPulses:Mapped[int] = mapped_column("left_wheel_pulse",BigInteger,nullable=False)
     rightWheelPulses:Mapped[int] = mapped_column("right_wheel_pulse",BigInteger,nullable=False)
