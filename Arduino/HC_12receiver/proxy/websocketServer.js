@@ -6,9 +6,11 @@ const wss = new WebSocket.Server({
 });
 
 const REMOTE_WS_URL = 'wss://retro2cbot-web-dugz.onrender.com/ws/robot';
-// const REMOTE_WS_URL = 'ws://127.0.0.1:8080/ws/robot';
+const REMOTE_WS_FRONT_URL = 'wss://retro2cbot-web.onrender.com/ws?password=36asgdv246sdgvf237uy5sdgb5';
 let remoteWS = null;
+let remoteFrontWS = null;
 
+// send data to database
 function connectRemote() {
   remoteWS = new WebSocket(REMOTE_WS_URL);
 
@@ -24,19 +26,41 @@ function connectRemote() {
   remoteWS.on('error', console.error);
 }
 
+//send data to frontend
+function connectRemoteFront() {
+  remoteFrontWS = new WebSocket(REMOTE_WS_FRONT_URL);
+
+  remoteFrontWS.on('open', () => {
+    console.log('Connected to Render FRONT WSS');
+  });
+
+  remoteFrontWS.on('close', () => {
+    console.log('Render FRONT WS closed, reconnecting...');
+    setTimeout(connectRemoteFront, 2000);
+  });
+
+  remoteFrontWS.on('error', console.error);
+}
+
 connectRemote();
+connectRemoteFront();
 
 wss.on('connection', (client) => {
   console.log('Arduino connected');
 
   client.on('message', (data) => {
-    const parsedData = JSON.parse(data)
-    parsedData.data = parsedData.data
-    console.log('From Arduino:', parsedData);
+    let parsedData;
+    try {
+      parsedData = JSON.parse(data)
+      parsedData.data = parsedData.data
+      console.log('From Arduino:', parsedData);
 
-    if (remoteWS?.readyState === WebSocket.OPEN) {
-      remoteWS.send(JSON.stringify(parsedData));
+      sendIfOpen(ws, parsedData);
+    } catch (e) {
+      console.error('Invalid JSON from Arduino', e);
+      return;
     }
+
   });
 
   client.on('close', () => {
@@ -44,3 +68,9 @@ wss.on('connection', (client) => {
   });
 
 });
+
+function sendIfOpen(ws, data) {
+  if (ws?.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(data));
+  }
+}

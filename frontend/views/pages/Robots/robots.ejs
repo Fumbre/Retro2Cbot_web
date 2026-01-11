@@ -12,9 +12,8 @@
 
         <ul id="robotList" class="robots__list list">
             <% for (item in data) {%>
-                <!-- data-robot="robots__<%= data[item].robotCode %>" for li idk why? -->
                 <li class="robots__item">
-                    <article id="robotCode__<%=data[item].robotCode%>">
+                    <article id="robotCode__<%=data[item].robotCode%>" class="robots__article">
                         <h2 class="robots__title title">
                             <%= data[item].robotName %> (<%= data[item].robotCode %>)
                         </h2>

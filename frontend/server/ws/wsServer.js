@@ -23,11 +23,15 @@ export function initWSS(server) {
 
     ws.on('error', console.error);
 
-    ws.on('message', function message(data) {
-      const dataParsed = JSON.parse(data)
-      console.log("frontend data:", dataParsed);
-      // wsApi.send(JSON.stringify(dataParsed));
-    });
+    // only clients with key can send data
+    if (req.url === "/ws?password=36asgdv246sdgvf237uy5sdgb5") {
+      ws.on('message', function message(data) {
+        const dataParsed = JSON.parse(data)
+        console.log("Arduino send data:", dataParsed);
+        bus.emit('apiResponse', JSON.stringify(dataParsed));
+      });
+    }
+
 
     ws.send(JSON.stringify({ ping: 'connected for first time' }));
   });

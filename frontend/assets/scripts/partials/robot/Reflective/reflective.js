@@ -29,10 +29,11 @@ export function wsReflectiveData() {
 
 
 export async function createReflectiveGraphic(root, robotName, robotCode) {
-    const rsData = await (await fetch(`api/robots/${robotCode}/rs`)).json();
+    const rsDataAll = await (await fetch(`api/robots/${robotCode}/rs`)).json();
 
-    // to do cut data somehow and put it to graphic
-    console.log(rsData);
+    const rsData = rsDataAll.slice(MAX_CHAR_DATA * -1);
+
+    // rs amount
     const rsId = ['a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7'];
 
     const graphEl = root.parentElement.querySelector(".reflective_sensor__graph");
