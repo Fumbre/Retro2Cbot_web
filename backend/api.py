@@ -72,7 +72,7 @@ def getNewData(robotCode:str,event:str):
     elif event == "sonar":
         result = selectNewSonarData(db=db, robotCode=robotCode)
     elif event == "neopixel":
-        result = selectNeopixelList(db=db, robotCode= robotCode)
+        result = selectNewNeopixelData(db=db, robotCode= robotCode)
     elif event == "pulses":
         result = selectNewPulsesData(db=db,robotCode=robotCode)
     elif event == "gripper":
