@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
+// use this idea later in a project
 router.get('/reflective', async (req, res) => {
   // const dataPython = (await fetch(`${process.env.API_IP}:${process.env.API_PORT}/`)).json();
 

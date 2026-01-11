@@ -72,12 +72,13 @@ export async function createReflectiveGraphic(root, robotName, robotCode) {
             type: 'value'
         },
         series: rsId.map((id, i) => {
-            buffers[id] = [234 * i, 234, 124, 994, 223 * i, 253, 252];
+
+            buffers[id] = rsData.map((obj) => obj[id]);
 
             return ({
                 name: id,
                 type: 'line',
-                data: buffers[id], // use fetch api in node js for createatin first data
+                data: buffers[id],
                 lineStyle: {
                     color: getSeriesColor(i),
                 },
@@ -85,6 +86,7 @@ export async function createReflectiveGraphic(root, robotName, robotCode) {
                     color: getSeriesColor(i),
                 },
             })
+
         }
         )
     };

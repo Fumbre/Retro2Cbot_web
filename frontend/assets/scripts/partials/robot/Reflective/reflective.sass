@@ -5,11 +5,18 @@ $colorTrans: .3s
 
 @for $i from 0 through list.length(colors.$graphColors) - 1
     li[data-sensor=reflective_sensor__a#{$i}]
-        color: var(--rs-a#{$i})
+        border-radius: 5px
+        padding: 10px
+        color: white
         cursor: pointer
-        transition: color $colorTrans ease
+        background-color: var(--rs-a#{$i})
+        transition: background-color .25s ease
+        & .reflective_sensor__name
+            color: inherit
+            transition: color $colorTrans ease
         &.disabled
-            color: grey
+            color: var(--rs-a#{$i})
+            background-color: transparent
 
 .reflective_sensor
     // background-color: colors.$mainColor
@@ -26,7 +33,7 @@ $colorTrans: .3s
             // margin-right: 15px
     &__value
         display: block
-        margin-bottom: 5px
+        margin-bottom: 10px
         padding: 5px
         width: 100%
         border-radius: 20px

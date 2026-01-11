@@ -31,54 +31,60 @@ def robotList(request:Request):
 @router.get("/robots/{robotCode}/{event}")
 def selectDataList(robotCode:str,event:str):
     db = SessionLocal()
-    if event == "rs": # reflective sensor
-        result = selectReflectSensorList(db=db, robotCode=robotCode)
-        myResult = {
-            **result,
-            "event": event
-            }
-    elif event == "sonar": # sonar
-        result = selectSonarList(db=db, robotCode=robotCode)
-        myResult = {
-         **result,
+    try: 
+        if event == "rs": # reflective sensor
+            result = selectReflectSensorList(db=db, robotCode=robotCode)
+            myResult = {
+                **result,
                 "event": event
-            }
-    elif event == "pulses": # pulses
-        result = selectPulsesList(db=db, robotCode=robotCode)
-        myResult = {
+                }
+        elif event == "sonar": # sonar
+            result = selectSonarList(db=db, robotCode=robotCode)
+            myResult = {
             **result,
-            "event": event
-            }
-    elif event == "neopixels": # leds
-        result = selectNeopixelList(db=db, robotCode=robotCode)
-        myResult = {
-            **result,
-            "event": event
-            }
-    elif event == "gripper": # gripper
-        result = selectCurrentGripper(db=db, robotCode=robotCode)
-        myResult = {
-            **result,
-             "event": event
-            }
-    return myResult
+                    "event": event
+                }
+        elif event == "pulses": # pulses
+            result = selectPulsesList(db=db, robotCode=robotCode)
+            myResult = {
+                **result,
+                "event": event
+                }
+        elif event == "neopixels": # leds
+            result = selectNeopixelList(db=db, robotCode=robotCode)
+            myResult = {
+                **result,
+                "event": event
+                }
+        elif event == "gripper": # gripper
+            result = selectCurrentGripper(db=db, robotCode=robotCode)
+            myResult = {
+                **result,
+                "event": event
+                }
+        return myResult
+    finally:
+        db.close()
 
 
 @router.get("/robots/newdata/{robotCode}/{event}")
 def getNewData(robotCode:str,event:str):
     db = SessionLocal()
-    if event == "rs":
-        result = selectNewRSData(db=db,robotCode=robotCode)
-    elif event == "sonar":
-        result = selectNewSonarData(db=db, robotCode=robotCode)
-    elif event == "neopixel":
-        result = selectNeopixelList(db=db, robotCode= robotCode)
-    elif event == "pulses":
-        result = selectNewPulsesData(db=db,robotCode=robotCode)
-    elif event == "gripper":
-        result = selectNewGripperData(db=db, robotCode=robotCode)
-    myResult = {
-            **result,
-            "event":event
-        }
-    return myResult    
+    try: 
+        if event == "rs":
+            result = selectNewRSData(db=db,robotCode=robotCode)
+        elif event == "sonar":
+            result = selectNewSonarData(db=db, robotCode=robotCode)
+        elif event == "neopixel":
+            result = selectNeopixelList(db=db, robotCode= robotCode)
+        elif event == "pulses":
+            result = selectNewPulsesData(db=db,robotCode=robotCode)
+        elif event == "gripper":
+            result = selectNewGripperData(db=db, robotCode=robotCode)
+        myResult = {
+                **result,
+                "event":event
+            }
+        return myResult    
+    finally:
+        db.close()

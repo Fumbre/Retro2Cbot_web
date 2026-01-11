@@ -10,7 +10,6 @@ router.get('/robots', async (req, res) => {
 
 router.get('/robots/:id/rs', validateRobot, async (req, res) => {
   const data = await getRSData(req.params["id"])
-  console.log('this is from api/robots/:id/rs node', data);
   return res.json(data);
 })
 
