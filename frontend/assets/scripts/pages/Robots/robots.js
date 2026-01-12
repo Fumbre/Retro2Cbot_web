@@ -1,11 +1,12 @@
+import { wsNeopixelsData } from '@partials/robot/Neopixels/neopixels';
 import './robots.sass'
 import { createReflectiveGraphic, wsReflectiveData } from '@partials/robot/Reflective/reflective';
 
 export async function createDOMRobots() {
   try {
-    const el = document.querySelectorAll(".reflective_sensor[data-robot-code]")
+    const reflectiveSensorEl = document.querySelectorAll(".reflective_sensor[data-robot-code]")
 
-    el.forEach((currentEl) => {
+    reflectiveSensorEl.forEach((currentEl) => {
       const { robotCode, robotName } = currentEl.dataset;
 
       createReflectiveGraphic(currentEl, robotName, robotCode)
@@ -13,6 +14,7 @@ export async function createDOMRobots() {
 
 
     wsReflectiveData();
+    wsNeopixelsData();
   } catch (e) {
     console.log(e)
   }

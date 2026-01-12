@@ -1,0 +1,14 @@
+<section data-robot-code="<%= data.robotCode %>" data-robot-name="<%= data.robotName %>" class="neopixels">
+    <div class="neopixels__contianer">
+        <h3 class="neopixels__title">neopixels of <%= data.robotName %>:
+        </h3>
+        <ul id="neopixelsList__<%= data.robotCode %>" class="neopixels__list list">
+            <% for (let i=0; i < 4; i++) {%>
+                <li class="neopixels__item">
+                    <div class="neopixels__block" data-neopixel="<%= i%>">
+                    </div>
+                </li>
+                <% }; %>
+        </ul>
+    </div>
+</section>

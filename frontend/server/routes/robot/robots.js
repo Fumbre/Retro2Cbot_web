@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from "express"
 // import { validateRobot } from '../../middleware/validateRobot.js';
-import { getRobots, getLastRSData } from '../../api/robots.js';
+import { getRobots, getLastRSData, getLastNeopixelsData } from '../../api/robots.js';
 
 const router = express.Router();
 
@@ -16,9 +16,14 @@ router.get('/robots', async (req, res) => {
         await Promise.all(
             robots.data.map(async (robot) => {
 
-                robot.sensorsReflective = [];
-                const rsLastData = await getLastRSData(robot.robotCode);
 
+                const [
+                    rsLastData,
+                    neopixelsLastData,
+                ] = await Promise.all([
+                    getLastRSData(robot.robotCode),
+                    getLastNeopixelsData(robot.robotCode),
+                ]);
 
                 for (let index = 0; index < 8; index++) {
                     const element = rsLastData[`a${index}`] || 0;
@@ -26,8 +31,12 @@ router.get('/robots', async (req, res) => {
                 }
                 robot.reflectiveStatus = rsLastData.currentStatus || '00000000';
 
+                console.log(neopixelsLastData)
+
             })
         );
+
+        console.log(robots);
 
 
         // for (let index = 0; index < robots.data.length; index++) {

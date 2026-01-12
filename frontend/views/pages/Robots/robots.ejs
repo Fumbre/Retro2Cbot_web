@@ -20,10 +20,12 @@
                         <img src="" alt="robot <%= data[item].robotCode %> photo">
                         <p class="robots__text">Last 24h <span class="robots__name">
                                 <%=data[item].robotName %>
-                            </span> status:</p>
-                        <!-- <a href=""send mock data></a> -->
-                        <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
-                            data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
+                            </span> status:
+                        </p>
+                        <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
+                            <!-- <a href="" send mock data></a> -->
+                            <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
+                                data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
                 </li>
                 </article>
                 <% }; %>

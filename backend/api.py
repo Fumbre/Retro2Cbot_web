@@ -75,8 +75,8 @@ def getNewData(robotCode:str,event:str):
             result = selectNewRSData(db=db,robotCode=robotCode)
         elif event == "sonar":
             result = selectNewSonarData(db=db, robotCode=robotCode)
-        elif event == "neopixel":
-            result = selectNeopixelList(db=db, robotCode= robotCode)
+        elif event == "neopixels":
+            result = selectNewNeopixelData(db=db, robotCode= robotCode)
         elif event == "pulses":
             result = selectNewPulsesData(db=db,robotCode=robotCode)
         elif event == "gripper":
