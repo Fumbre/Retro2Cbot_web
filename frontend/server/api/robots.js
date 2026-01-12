@@ -83,14 +83,16 @@ async function getNeopixelsData(robotCode) {
 
 async function getLastNeopixelsData(robotCode) {
   try {
-    const robotSensor = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/newdata/${robotCode}/neopixels`)).json();
+    const robotNeopixels = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/newdata/${robotCode}/neopixels`)).json();
 
-    if (robotSensor.code != 200) {
+    console.log(robotNeopixels);
+
+    if (robotNeopixels.code != 200) {
       console.error('Get robotSensor code is not 200 in getLastRSData')
       throw new Error("robotSensor code is not 200 in getLastRSData");
     }
 
-    return robotSensor.data;
+    return robotNeopixels.data;
   } catch (e) {
     return [];
   }

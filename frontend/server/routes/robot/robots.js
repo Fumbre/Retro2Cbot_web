@@ -16,6 +16,7 @@ router.get('/robots', async (req, res) => {
         await Promise.all(
             robots.data.map(async (robot) => {
 
+                robot.sensorsReflective = [];
 
                 const [
                     rsLastData,
@@ -31,12 +32,10 @@ router.get('/robots', async (req, res) => {
                 }
                 robot.reflectiveStatus = rsLastData.currentStatus || '00000000';
 
-                console.log(neopixelsLastData)
+
 
             })
         );
-
-        console.log(robots);
 
 
         // for (let index = 0; index < robots.data.length; index++) {
@@ -50,8 +49,6 @@ router.get('/robots', async (req, res) => {
             title: "about robots",
             page: "robots",
             data: robots.data,
-            sensors: [203, 21, 234, 23, 239, 124, 234, 23],
-            currentStatus: '10011110'
         })
     } catch (e) {
         console.error(e);
