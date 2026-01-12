@@ -81,12 +81,15 @@ def selectNewNeopixelData(db:Session,robotCode:str):
     # get maxTime 
     maxTimeSQL = (select(func.max(RobotNeopxiel.createTime)).where(RobotNeopxiel.robotId == robot.id)
                   .scalar_subquery())
-    neopixels = db.scalar(select(RobotNeopxiel).where(
+    neopixels = db.scalars(select(RobotNeopxiel).where(
         and_(
             RobotNeopxiel.robotId == robot.id,
             RobotNeopxiel.createTime == maxTimeSQL
         )
-    ))
-    return Result.success(data=orm_dict(neopixels),message="select successfully!")
+    )).all()
+    result = []
+    for led in neopixels:
+        result.append(orm_dict(led))
+    return Result.success(data=result,message="select successfully!")
 
 
