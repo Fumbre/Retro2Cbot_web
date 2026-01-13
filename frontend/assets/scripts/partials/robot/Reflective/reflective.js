@@ -31,8 +31,6 @@ export function wsReflectiveData() {
 export async function createReflectiveGraphic(root, robotName, robotCode) {
     const rsDataAll = await (await fetch(`api/robots/${robotCode}/rs`)).json();
 
-    console.log(rsDataAll);
-
     const rsData = rsDataAll.slice(MAX_CHAR_DATA * -1);
 
     // rs amount

@@ -16,15 +16,20 @@ export function wsNeopixelsData() {
 }
 
 function updateNeopixels(data) {
-  const neopixelsListEl = document.getElementById(`neopixelsList__${data.robotCode}`);
+  console.log(data);
 
-  console.log(neopixelsListEl);
+  data.map((neo) => {
+    const neopixelsListEl = document.getElementById(`neopixelsList__${neo.robotCode}`);
+    console.log(neopixelsListEl);
 
-  if (neopixelsListEl)
-    return
+    if (!neopixelsListEl)
+      return
 
-  const pixel = neopixelsListEl.querySelector(`[data-neopixel="${index}"]`);
+    const pixel = neopixelsListEl.querySelector(`[data-neopixel="${neo.neopixelIndex}"]`);
 
-  console.log(pixel);
+    pixel.firstElementChild.style.backgroundColor = `rgb(${neo.r},${neo.g},${neo.b})`;
+  })
+
+
 
 }

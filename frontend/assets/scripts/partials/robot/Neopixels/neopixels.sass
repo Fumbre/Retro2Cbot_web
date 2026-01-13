@@ -1,3 +1,34 @@
 @use 'colors'
 
 $colorTrans: .3s
+
+.neopixels
+  &__list
+    display: flex
+    justify-content: space-between
+    align-items: center
+    max-width: calc( 100% / 8)
+    flex-wrap: wrap
+    gap: 25px
+  &__item
+    min-height: 20px
+    width: calc( (100% / 2) - 25px )
+    &[data-neopixel="0"]
+      order: 3
+    &[data-neopixel="1"]
+      display: flex
+      order: 4
+      justify-content: flex-end
+    &[data-neopixel="2"]
+      display: flex
+      order: 2
+      justify-content: flex-end
+    &[data-neopixel="3"]
+      order: 1
+
+  &__led
+    border-top-left-radius: 50%
+    border-top-right-radius: 50%
+    width: 50px
+    height: 50px
+    transition: background-color $colorTrans ease
