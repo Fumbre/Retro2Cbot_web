@@ -86,7 +86,7 @@ def selectNewNeopixelData(db:Session,robotCode:str):
             RobotNeopxiel.robotId == robot.id,
             RobotNeopxiel.createTime == maxTimeSQL
         )
-    )).all()
+    ).order_by(RobotNeopxiel.neopixelIndex.asc())).all()
     result = []
     for led in neopixels:
         result.append(orm_dict(led))
