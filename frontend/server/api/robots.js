@@ -85,8 +85,6 @@ async function getLastNeopixelsData(robotCode) {
   try {
     const robotNeopixels = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/newdata/${robotCode}/neopixels`)).json();
 
-    console.log(robotNeopixels);
-
     if (robotNeopixels.code != 200) {
       console.error('Get robotSensor code is not 200 in getLastRSData')
       throw new Error("robotSensor code is not 200 in getLastRSData");

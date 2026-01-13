@@ -5,7 +5,8 @@
         <ul id="neopixelsList__<%= data.robotCode %>" class="neopixels__list list">
             <% for (let i=0; i < 4; i++) {%>
                 <li class="neopixels__item">
-                    <div class="neopixels__block" data-neopixel="<%= i%>">
+                    <div class="neopixels__block" data-neopixel="<%= i%>"
+                        style="background-color: rgb( <%= data.sensorsNeopixels[i].r%>, <%= data.sensorsNeopixels[i].g%>, <%= data.sensorsNeopixels[i].b%> );">
                     </div>
                 </li>
                 <% }; %>
