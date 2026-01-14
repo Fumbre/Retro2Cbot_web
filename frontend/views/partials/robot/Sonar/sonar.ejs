@@ -9,6 +9,15 @@
                     <p class="sonar__value text">
                         <%= data.sensorsSonar[i]["sonarDistance"]%>
                     </p>
+                    <% if (data.sensorsSonar[i]['direction']==0) { %>
+                        <p class="sonar__direction text">Center</p>
+
+                        <% } else if (data.sensorsSonar[i]['direction']==1) { %>
+                            <p class="sonar__direction text">Right</p>
+
+                            <% } else if (data.sensorsSonar[i]['direction']==2) { %>
+                                <p class="sonar__direction text">Left</p>
+                                <% } %>
                 </li>
                 <% }; %>
         </ul>

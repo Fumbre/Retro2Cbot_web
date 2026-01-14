@@ -24,8 +24,9 @@
                         <ul class="robots__sensors list">
                             <li class="robots__sensor">
                                 <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
-                                    <%- include('../../partials/robot/Sonar/sonar', { data: data[item]}) %>
-
+                            </li>
+                            <li>
+                                <%- include('../../partials/robot/Sonar/sonar', { data: data[item]}) %>
                             </li>
                         </ul>
                         <!-- <a href="" send mock data></a> -->
