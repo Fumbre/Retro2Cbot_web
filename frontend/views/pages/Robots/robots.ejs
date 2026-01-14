@@ -1,9 +1,9 @@
 <section class="robots">
     <div class="robots__contianer container">
-        <nav>
-            <ul>
+        <nav class="robots__nav robots_nav">
+            <ul class="robots_nav__list list">
                 <% for (i in data) {%>
-                    <li><a href="#robotCode__<%=data[i].robotCode%>">
+                    <li class="robots_nav__item"><a href="#robotCode__<%=data[i].robotCode%>">
                             <%= data[i].robotName%> (<%= data[i].robotCode%>)
                         </a></li>
                     <%};%>
@@ -17,11 +17,13 @@
                         <h2 class="robots__title title">
                             <%= data[item].robotName %> (<%= data[item].robotCode %>)
                         </h2>
-                        <img src="" alt="robot <%= data[item].robotCode %> photo">
-                        <p class="robots__text">Last 24h <span class="robots__name">
+                        <p class="robots__text text">Last 24h <span class="robots__name">
                                 <%=data[item].robotName %>
                             </span> status:
                         </p>
+                        <ul>
+
+                        </ul>
                         <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
                             <!-- <a href="" send mock data></a> -->
                             <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:

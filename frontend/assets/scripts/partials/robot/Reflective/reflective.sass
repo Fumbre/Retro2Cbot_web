@@ -10,20 +10,22 @@ $colorTrans: .3s
         color: white
         cursor: pointer
         background-color: var(--rs-a#{$i})
-        transition: background-color .25s ease
+        transition: background-color .25s ease-in
         & .reflective_sensor__name
             color: inherit
-            transition: color $colorTrans ease
         &.disabled
-            color: var(--rs-a#{$i})
             background-color: transparent
 
 .reflective_sensor
     // background-color: colors.$mainColor
-    color: #00f
+    &__title
+        margin-bottom: 15px
     &__graph
+        margin-bottom: 20px
         width: 100%
         height: 400px
+        background-color: colors.$white
+        border-radius: 10px
     &__list
         display: flex
         justify-content: space-between
