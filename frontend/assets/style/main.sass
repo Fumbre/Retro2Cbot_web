@@ -6,27 +6,20 @@
 // page index
 .hero
   padding-bottom: 20px
-  background-color: #333029
+  background-color: colors.$mainBlack
   &__img
     display: flex
+    max-width: 100%
     margin: 0 auto
+
 // about 
 .about
-  &__img
-    width: 250px
-    min-height: 200px
-    background-image: url("../img/group_front_page.jpg")
-    background-repeat: no-repeat
-    background-position: center
-    background-size: cover
-
   &__title
     margin: 0 0 15px
-    font-size: 25px
+    font-size: 30px
   &__text
     margin-bottom: 10px
-    font-size: 18px
-    color: colors.$mainGreen
+    font-size: 20px
   &__members
     display: flex
     justify-content: space-between
@@ -41,9 +34,14 @@
     color: white
 
 .about_member
-
   &__fullname
     margin: 0 0 10px
+    font-size: 20px
+  &__text
+    font-size: 15px
+    line-height: 22px
+  &__img
+    width: 100%
 
 @media ( max-width:  890px)
   .about
