@@ -96,5 +96,35 @@ async function getLastNeopixelsData(robotCode) {
   }
 }
 
+async function getSonarData(robotCode) {
+  try {
+    const robotSonar = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/${robotCode}/sonar`)).json();
 
-export { router, getRobots, getRSData, getLastRSData, getLastNeopixelsData };
+    if (robotSonar.code != 200) {
+      console.error('Get robotSonar code is not 200')
+      return robotSonar
+    }
+
+    return robotSonar.data;
+  } catch (e) {
+    return e
+  }
+}
+
+async function getLastSonarData(robotCode) {
+  try {
+    const robotSonar = await (await fetch(`${process.env.API_PROTOCOL}://${process.env.API_URL}/robots/newdata/${robotCode}/sonar`)).json();
+
+    if (robotSonar.code != 200) {
+      console.error('Get robotSensor code is not 200 in getLastRSData')
+      throw new Error("robotSensor code is not 200 in getLastRSData");
+    }
+
+    return robotSonar.data;
+  } catch (e) {
+    return [];
+  }
+}
+
+
+export { router, getRobots, getRSData, getLastRSData, getLastNeopixelsData, getSonarData, getLastSonarData };

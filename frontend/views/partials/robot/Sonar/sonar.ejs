@@ -1,0 +1,16 @@
+<section data-robot-code="<%= data.robotCode %>" data-robot-name="<%= data.robotName %>" class="sonar">
+    <div class="sonar__contianer">
+        <h3 class="sonar__title title">Sonar of <%= data.robotName %>:
+        </h3>
+        <ul id="sonarList__<%= data.robotCode %>" class="sonar__list list">
+            <% for (let i=0; i < data.sensorsSonar.length; i++) {%>
+                <li class="sonar__item" data-sonar-direction="<%= data.sensorsSonar[i]['direction'] %>">
+
+                    <p class="sonar__value text">
+                        <%= data.sensorsSonar[i]["sonarDistance"]%>
+                    </p>
+                </li>
+                <% }; %>
+        </ul>
+    </div>
+</section>

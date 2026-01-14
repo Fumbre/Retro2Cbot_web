@@ -21,13 +21,16 @@
                                 <%=data[item].robotName %>
                             </span> status:
                         </p>
-                        <ul>
+                        <ul class="robots__sensors list">
+                            <li class="robots__sensor">
+                                <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
+                                    <%- include('../../partials/robot/Sonar/sonar', { data: data[item]}) %>
 
+                            </li>
                         </ul>
-                        <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
-                            <!-- <a href="" send mock data></a> -->
-                            <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
-                                data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
+                        <!-- <a href="" send mock data></a> -->
+                        <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
+                            data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
                 </li>
                 </article>
                 <% }; %>

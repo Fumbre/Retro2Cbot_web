@@ -31,5 +31,4 @@ function updateNeopixels(data) {
   })
 
 
-
 }

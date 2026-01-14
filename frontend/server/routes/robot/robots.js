@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express from "express"
 // import { validateRobot } from '../../middleware/validateRobot.js';
-import { getRobots, getLastRSData, getLastNeopixelsData } from '../../api/robots.js';
+import { getRobots, getLastRSData, getLastNeopixelsData, getLastSonarData } from '../../api/robots.js';
 
 const router = express.Router();
 
@@ -18,13 +18,16 @@ router.get('/robots', async (req, res) => {
 
                 robot.sensorsReflective = [];
                 robot.sensorsNeopixels = [];
+                robot.sensorsSonar = [];
 
                 const [
                     rsLastData,
                     neopixelsLastData,
+                    sonarLastData
                 ] = await Promise.all([
                     getLastRSData(robot.robotCode),
                     getLastNeopixelsData(robot.robotCode),
+                    getLastSonarData(robot.robotCode),
                 ]);
 
                 for (let index = 0; index < 8; index++) {
@@ -46,10 +49,22 @@ router.get('/robots', async (req, res) => {
                 }
 
                 robot.sensorsNeopixels.push(...neopixelsLastData);
+
+                if (robot.robotCode === "BB011") {
+                    robot.sensorsSonar.push(...sonarLastData);
+                } else {
+                    sonarLastData.length != 0 ?
+                        robot.sensorsSonar.push(sonarLastData) : robot.sensorsSonar.push(
+                            {
+                                direction: '0',
+                                sonarDistance: 0,
+                            }
+                        )
+                }
+
             })
         );
 
-        console.log(robots.data[0]);
 
         // for (let index = 0; index < robots.data.length; index++) {
         //     const item = robots.data[index];

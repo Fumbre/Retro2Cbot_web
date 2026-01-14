@@ -1,5 +1,6 @@
 import { wsNeopixelsData } from '@partials/robot/Neopixels/neopixels';
 import './robots.sass'
+import { wsSonarData } from '@partials/robot/Sonar/sonar';
 import { createReflectiveGraphic, wsReflectiveData } from '@partials/robot/Reflective/reflective';
 
 export async function createDOMRobots() {
@@ -15,6 +16,7 @@ export async function createDOMRobots() {
 
     wsReflectiveData();
     wsNeopixelsData();
+    wsSonarData();
   } catch (e) {
     console.log(e)
   }
