@@ -12,13 +12,22 @@
     padding: 20px
     background-color: colors.$mainGreen
   &__item
-    &:nth-child(2)
-      order: -1
     &:not(:last-child)
       margin-right: 50px
+
   &__value
     text-align: center
     font-size: 35px
   &__direction
     text-align: center
     font-size: 20px
+
+.sonar
+  &__item[data-sonar-direction="0"]
+    order: 0
+  &__item[data-sonar-direction="1"]
+    order: 1
+    margin: 0
+  &__item[data-sonar-direction="2"]
+    order: -1
+    margin-right: 50px
