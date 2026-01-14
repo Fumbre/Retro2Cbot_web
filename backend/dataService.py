@@ -45,7 +45,7 @@ def selectNewSonarData(db:Session,robotCode:str):
     )).all()
     result = []
     for sonar in sonarList:
-        result.append[orm_dict(sonar)]
+        result.append(orm_dict(sonar))
     return Result.success(data=result,message="select successfully!")
 
 
