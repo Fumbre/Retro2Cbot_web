@@ -57,6 +57,13 @@ const config = (env, argv) => {
             },
           ],
         },
+        {
+          test: /\.(png|jpg|jpeg|gif|svg)$/i,
+          type: 'asset/resource',
+          generator: {
+            filename: 'images/[name].[hash][ext]',
+          },
+        }
       ],
     },
 

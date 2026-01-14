@@ -1,7 +1,56 @@
 @use 'colors'
 
 .app
-  background: colors.$mainColor
+  background: colors.$mainWhite
 
-.about__member
-  margin-bottom: 5px
+// page index
+.hero
+  padding-bottom: 20px
+  background-color: #333029
+  &__img
+    display: flex
+    margin: 0 auto
+// about 
+.about
+  &__img
+    width: 250px
+    min-height: 200px
+    background-image: url("../img/group_front_page.jpg")
+    background-repeat: no-repeat
+    background-position: center
+    background-size: cover
+
+  &__title
+    margin: 0 0 15px
+    font-size: 25px
+  &__text
+    margin-bottom: 10px
+    font-size: 18px
+    color: colors.$mainGreen
+  &__members
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    width: 100%
+    row-gap: 25px
+  &__member
+    padding: 20px
+    width: calc( (100% / 3 ) - 25px )
+    background-color: colors.$mainRed
+
+    color: white
+
+.about_member
+
+  &__fullname
+    margin: 0 0 10px
+
+@media ( max-width:  890px)
+  .about
+    &__member
+      width: calc( (100% / 2 ) - 15px )
+
+@media ( max-width:  520px)
+  .about
+    &__member
+      width: 100%
