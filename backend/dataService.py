@@ -37,13 +37,16 @@ def selectNewSonarData(db:Session,robotCode:str):
     # get maxTime 
     maxTimeSQL = (select(func.max(RobotSonar.createTime)).where(RobotSonar.robotId == robot.id)
                   .scalar_subquery())
-    sonar = db.scalar(select(RobotSonar).where(
+    sonarList = db.scalars(select(RobotSonar).where(
         and_(
             RobotSonar.robotId == robot.id,
             RobotSonar.createTime == maxTimeSQL
         )
-    ))
-    return Result.success(data=orm_dict(sonar),message="select successfully!")
+    )).all()
+    result = []
+    for sonar in sonarList:
+        result.append[orm_dict(sonar)]
+    return Result.success(data=result,message="select successfully!")
 
 
 def selectNewPulsesData(db:Session,robotCode:str):
