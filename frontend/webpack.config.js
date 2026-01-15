@@ -18,7 +18,18 @@ const config = (env, argv) => {
       filename: isDev ? "bundle.js" : "bundle.[contenthash].js",
       publicPath: '/',
       clean: true,
+      chunkFilename: 'chunks/[name].[contenthash].js'
     },
+
+    resolve: {
+      alias: {
+        '@pages': path.resolve(__dirname, 'assets/scripts/pages/'),
+        '@partials': path.resolve(__dirname, 'assets/scripts/partials/'),
+        '@websocket': path.resolve(__dirname, 'assets/scripts/websocket/'),
+      },
+      extensions: ['.js']
+    },
+
 
     module: {
       rules: [
@@ -46,6 +57,13 @@ const config = (env, argv) => {
             },
           ],
         },
+        {
+          test: /\.(png|jpg|jpeg|gif|svg)$/i,
+          type: 'asset/resource',
+          generator: {
+            filename: 'images/[name].[hash][ext]',
+          },
+        }
       ],
     },
 
@@ -60,5 +78,7 @@ const config = (env, argv) => {
     watch: isDev,
   }
 };
+
+path.resolve()
 
 export default config;

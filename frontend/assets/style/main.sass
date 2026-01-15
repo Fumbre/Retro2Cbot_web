@@ -1,7 +1,54 @@
 @use 'colors'
 
 .app
-  background: colors.$mainColor
+  background: colors.$mainWhite
 
-.about__member
-  margin-bottom: 5px
+// page index
+.hero
+  padding-bottom: 20px
+  background-color: colors.$mainBlack
+  &__img
+    display: flex
+    max-width: 100%
+    margin: 0 auto
+
+// about 
+.about
+  &__title
+    margin: 0 0 15px
+    font-size: 30px
+  &__text
+    margin-bottom: 10px
+    font-size: 20px
+  &__members
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    width: 100%
+    row-gap: 25px
+  &__member
+    padding: 20px
+    width: calc( (100% / 3 ) - 25px )
+    background-color: colors.$mainRed
+
+    color: white
+
+.about_member
+  &__fullname
+    margin: 0 0 10px
+    font-size: 20px
+  &__text
+    font-size: 15px
+    line-height: 22px
+  &__img
+    width: 100%
+
+@media ( max-width:  890px)
+  .about
+    &__member
+      width: calc( (100% / 2 ) - 15px )
+
+@media ( max-width:  520px)
+  .about
+    &__member
+      width: 100%

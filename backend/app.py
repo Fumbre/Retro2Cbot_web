@@ -1,7 +1,4 @@
-from database import app,SessionLocal
-from fastapi import FastAPI,Request,WebSocket, WebSocketDisconnect
 from dotenv import load_dotenv
-from WebsocketManager import WebsocketConnectionManager
 import uvicorn
 from service import (
     insertRobots,
@@ -16,7 +13,6 @@ from service import (
 import os
 import asyncio
 
-load_dotenv()
 
 # Set to hold connected clients
 clients = set()
@@ -88,6 +84,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 if __name__ == "__main__":
+    import uvicorn
+    # load value of configurations from .env file
+    load_dotenv()
     SERVER_IP = os.environ.get("SERVER_IP")
     SERVER_PORT = int(os.environ.get("SERVER_PORT"))
+    # Uvicorn is a async web service framework. it can support normal and async Http request and websockets
     uvicorn.run("app:app", host=SERVER_IP, port=SERVER_PORT, reload=True)

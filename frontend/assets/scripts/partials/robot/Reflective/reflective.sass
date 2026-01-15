@@ -1,0 +1,53 @@
+@use 'colors'
+@use 'sass:list'
+
+$colorTrans: .3s
+
+@for $i from 0 through list.length(colors.$graphColors) - 1
+    li[data-sensor=reflective_sensor__a#{$i}]
+        border-radius: 5px
+        padding: 10px
+        color: white
+        cursor: pointer
+        background-color: var(--rs-a#{$i})
+        transition: background-color .25s ease-in
+        & .reflective_sensor__name
+            color: inherit
+        &.disabled
+            background-color: transparent
+
+.reflective_sensor
+    // background-color: colors.$mainColor
+    &__title
+        margin-bottom: 15px
+    &__graph
+        margin-bottom: 20px
+        width: 100%
+        height: 400px
+        background-color: colors.$white
+        border-radius: 10px
+    &__list
+        display: flex
+        justify-content: space-between
+    &__item
+        width: calc( (100% / 8) - 15px )
+        // &:not(:last-child)
+            // margin-right: 15px
+    &__value
+        display: block
+        margin-bottom: 10px
+        padding: 5px
+        width: 100%
+        border-radius: 20px
+        text-align: center
+        transition: background-color $colorTrans ease-in, color $colorTrans ease
+
+    &__line_status1
+        color: colors.$reflectiveColorLow
+        background-color: colors.$reflectiveColorHigh
+    &__line_status0
+        color: colors.$reflectiveColorHigh
+        background-color: colors.$reflectiveColorLow
+    &__name
+        margin: 0
+        text-align: center

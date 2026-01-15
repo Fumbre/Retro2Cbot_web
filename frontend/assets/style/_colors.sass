@@ -1,5 +1,18 @@
-$mainColor: #3498db
+@use 'sass:list'
+
 $white: #e7e9ef
+
+$mainBlack: #333029
+$mainWhite: #fde3d6
+$mainGreen: #658762
+$mainRed: #ad5048
+$mainOrange: #e0a15c
 
 $reflectiveColorHigh: #333
 $reflectiveColorLow: #f3f3f3
+
+$graphColors: (#5470c6, #91cc75, #fac858, #ee6666, #73c0de, #3ba272, #fc8452, #9a60b4)
+
+:root
+  @for $i from 0 through list.length($graphColors) - 1
+    --rs-a#{$i}: #{list.nth($graphColors, $i + 1)}

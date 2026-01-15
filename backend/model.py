@@ -1,12 +1,14 @@
-from sqlalchemy import BigInteger,Integer,String,Boolean,DateTime,Float,func,select,and_
+from sqlalchemy import BigInteger,Integer,CHAR,String,Boolean,DateTime,Float,func,select,and_
 from sqlalchemy.orm import Mapped,mapped_column
 from datetime import datetime
 from database import Base
 
 
 
-class Robot(Base):
-    __tablename__ = "robots"
+class Robot(Base): # this class extend SQLAlchemy ORM class, which name is Base
+    __tablename__ = "robots" # build connection between ORM class and table in database
+    # get reflection between properties and columns.
+    # for example, id in ORM class, which data type is integer, reflects to id in table, which data type is Bigint, is primary key. 
     id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotName:Mapped[str] = mapped_column("robot_name",String,nullable=True)
     robotCode:Mapped[str] = mapped_column("robot_code",String,nullable=True)
@@ -28,7 +30,7 @@ class ReflectiveSensor(Base):
 
 class RobotPulses(Base):
     __tablename__ = "robot_pulses"
-    id:Mapped[int] = mapped_column("id",primary_key=True,autoincrement=False)
+    id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotId:Mapped[int] = mapped_column("robot_id",BigInteger,nullable=False)
     leftWheelPulses:Mapped[int] = mapped_column("left_wheel_pulse",BigInteger,nullable=False)
     rightWheelPulses:Mapped[int] = mapped_column("right_wheel_pulse",BigInteger,nullable=False)
@@ -38,6 +40,7 @@ class RobotSonar(Base):
     __tablename__ = "robot_sonar"
     id:Mapped[int] = mapped_column("id",BigInteger,primary_key=True,autoincrement=False)
     robotId:Mapped[int] = mapped_column("robot_id",BigInteger,nullable=False)
+    direction:Mapped[str] = mapped_column("direction",CHAR(1))
     sonarDistance:Mapped[float] = mapped_column("sonar_distance",Float,nullable=False)
     createTime:Mapped[datetime] = mapped_column("create_time",DateTime,server_default=func.now())
 

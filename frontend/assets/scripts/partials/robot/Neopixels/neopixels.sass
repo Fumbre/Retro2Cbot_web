@@ -1,0 +1,44 @@
+@use 'colors'
+
+$colorTrans: .3s
+
+.neopixels
+  padding-top: 20px
+  padding-bottom: 20px
+  &__title
+    margin-bottom: 15px
+  &__list
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 10px
+    min-width: 175px
+    max-width: 175px
+    flex-wrap: wrap
+    gap: 25px
+    border-radius: 20px
+    background-color: white
+  &__item
+    min-height: 20px
+    width: calc( (100% / 2) - 25px )
+    &[data-neopixel="0"]
+      order: 3
+    &[data-neopixel="1"]
+      display: flex
+      order: 4
+      justify-content: flex-end
+    &[data-neopixel="2"]
+      display: flex
+      order: 2
+      justify-content: flex-end
+    &[data-neopixel="3"]
+      order: 1
+
+  &__led
+    border-top-left-radius: 50%
+    border-top-right-radius: 50%
+    min-width: 50px
+    max-width: 50px
+    min-height: 50px
+    max-width: 50px
+    transition: background-color $colorTrans ease

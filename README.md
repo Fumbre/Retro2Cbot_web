@@ -26,3 +26,6 @@ web app for Retro2Cbot
 2. npm i 
 3. npm run dev
 4. npm run start:dev
+
+## Projcet idea
+Server-render components / HTML partial

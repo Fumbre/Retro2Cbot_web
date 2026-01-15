@@ -1,0 +1,40 @@
+<section class="robots">
+    <div class="robots__contianer container">
+        <nav class="robots__nav robots_nav">
+            <ul class="robots_nav__list list">
+                <% for (i in data) {%>
+                    <li class="robots_nav__item"><a href="#robotCode__<%=data[i].robotCode%>">
+                            <%= data[i].robotName%> (<%= data[i].robotCode%>)
+                        </a></li>
+                    <%};%>
+            </ul>
+        </nav>
+
+        <ul id="robotList" class="robots__list list">
+            <% for (item in data) {%>
+                <li class="robots__item">
+                    <article id="robotCode__<%=data[item].robotCode%>" class="robots__article">
+                        <h2 class="robots__title title">
+                            <%= data[item].robotName %> (<%= data[item].robotCode %>)
+                        </h2>
+                        <p class="robots__text text">Last 24h <span class="robots__name">
+                                <%=data[item].robotName %>
+                            </span> status:
+                        </p>
+                        <ul class="robots__sensors list">
+                            <li class="robots__sensor">
+                                <%- include('../../partials/robot/Neopixels/neopixels', { data: data[item]}) %>
+                            </li>
+                            <li>
+                                <%- include('../../partials/robot/Sonar/sonar', { data: data[item]}) %>
+                            </li>
+                        </ul>
+                        <!-- <a href="" send mock data></a> -->
+                        <%- include('../../partials/robot/Reflective/reflective', { data: data[item], sensors:
+                            data[item].sensorsReflective, currentStatus: data[item].reflectiveStatus } )%>
+                </li>
+                </article>
+                <% }; %>
+        </ul>
+    </div>
+</section>

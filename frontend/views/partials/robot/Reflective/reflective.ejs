@@ -1,0 +1,22 @@
+<section data-robot-code="<%= data.robotCode %>" data-robot-name="<%= data.robotName %>" class="reflective_sensor">
+    <div class="reflective_sensor__contianer">
+        <h3 class="reflective_sensor__title title">Reflective sensors of <%= data.robotName %>:
+        </h3>
+        <div class="reflective_sensor__graph"></div>
+        <ul id="rsList__<%= data.robotCode %>" class="reflective_sensor__list list">
+            <% for (item in sensors) {%>
+                <li data-sensor="reflective_sensor__a<%= item %>" data-series="a<%= item%>"
+                    class="reflective_sensor__item">
+                    <div class="reflective_sensor__block">
+                        <span class="reflective_sensor__value reflective_sensor__line_status<%= currentStatus[item] %>">
+                            <%= sensors[item] %>
+                        </span>
+                        <p class="reflective_sensor__name">
+                            A<%= item %>
+                        </p>
+                    </div>
+                </li>
+                <% }; %>
+        </ul>
+    </div>
+</section>

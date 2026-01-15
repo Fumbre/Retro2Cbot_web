@@ -52,14 +52,15 @@ def insertReflectiveSensors(db: Session, sensor_list: list[dict]):
         robotCode = sensor_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         sensors = []
+        id = getSnowFlakeId()
         for sensor in sensor_list:
-            id = getSnowFlakeId()
             rs = ReflectiveSensor(id=id, robotId=robot.id)
             dict_orm(sensor, rs)
             sensors.append(rs)
         db.add_all(sensors)
         db.commit()
-        return Result.success(message="insert sucess!")
+        out =  db.scalar(select(ReflectiveSensor).where(ReflectiveSensor.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
@@ -78,7 +79,7 @@ def selectReflectSensorList(db: Session, robotCode: str):
                 ReflectiveSensor.createTime < endDate,
             )
         )
-        .order_by(ReflectiveSensor.createTime.desc())
+        .order_by(ReflectiveSensor.createTime.asc())
     ).fetchall()
     resultList = []
     for reflectiveSensor in dataList:
@@ -101,8 +102,10 @@ def insertRobotSonarData(db: Session, list: list[dict]):
             sonars.append(data)
         db.add_all(sonars)
         db.commit()
-        return Result.success(message="insert success!")
+        out = db.scalar(select(RobotSonar).where(RobotSonar.id == id))
+        return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 
@@ -122,7 +125,7 @@ def selectSonarList(db: Session, robotCode: str):
                 RobotSonar.createTime < endDate,
             )
         )
-        .order_by(RobotSonar.createTime.desc())
+        .order_by(RobotSonar.createTime.asc())
     ).fetchall()
 
     for sonar in list:
@@ -138,15 +141,17 @@ def insertRobotPulses(db: Session, list: list[dict]):
         robotCode = list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         pulsesList = []
+        id = getSnowFlakeId()
         for data in list:
-            id = getSnowFlakeId()
             pulses = RobotPulses(id=id, robotId=robot.id)
             dict_orm(data, pulses)
             pulsesList.append(pulses)
         db.add_all(pulsesList)
         db.commit()
-        return Result.success(message="insert successfully!")
+        out = db.scalar(select(RobotPulses).where(RobotPulses.id == id))
+        return orm_dict(out)
     except Exception as e:
+        print(e)
         db.rollback()
         return Result.error(message=e)
 
@@ -155,6 +160,13 @@ def selectPulsesList(db: Session, robotCode: str):
     startDate = datetime.combine(date.today(), datetime.min.time())
     endDate = startDate + timedelta(days=1)
     dataList = []
+    # this part represent this SQL:
+    # select robot_pulses.id, robot_pulses.robot_id, robot_pulses.left_wheel_pulse, 
+    # robot_pulses.right_wheel_pulses, robot_pulses.create_time
+    # from robot_pulses
+    # inner join robots on robots.id = robot_pulses.robot_id
+    # where robot_pulses.create_time >= #{startDate} and robot_pulses.create_time < #{endDate} and robots.robot_code = #{robotCode}
+    # order by robot_pulses.create_time asc;
     result = db.scalars(
         select(RobotPulses)
         .join(Robot, Robot.id == RobotPulses.robotId)
@@ -165,9 +177,9 @@ def selectPulsesList(db: Session, robotCode: str):
                 Robot.robotCode == robotCode,
             )
         )
-        .order_by(RobotPulses.createTime.desc())
+        .order_by(RobotPulses.createTime.asc())
     ).fetchall()
-
+     
     for data in result:
         pulse = orm_dict(data)
         dataList.append(pulse)
@@ -183,15 +195,16 @@ def insertNeopixels(db: Session, data_list: list[dict]):
         robotCode = data_list[0].get("robotCode")
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
         for data in data_list:
-            id = getSnowFlakeId()
+            id = getSnowFlakeId() # get snowflake id
             neopixel = RobotNeopxiel(id=id, robotId=robot.id)
             dict_orm(data, neopixel)
             neopexielList.append(neopixel)
-        db.add_all(neopexielList)
-        db.commit()
-        return Result.success(message="insert successfully!")
+        db.add_all(neopexielList) # insert data, which data type is list[RobotNeopxiel]
+        db.commit() # submit transactions to the database (insert data into database really)
+        out = db.scalar(select(RobotNeopxiel).where(RobotNeopxiel.id == id))
+        return orm_dict(out)
     except Exception as e:
-        db.rollback()
+        db.rollback() # if there exists errors, it rollbacks the transaction for avoiding data of trush.
         return Result.error(message=e)
 
 
@@ -209,7 +222,7 @@ def selectNeopixelList(db: Session, robotCode: str):
                 Robot.robotCode == robotCode,
             )
         )
-        .order_by(RobotNeopxiel.createTime.desc())
+        .order_by(RobotNeopxiel.createTime.asc())
     ).fetchall()
     for data in result:
         neopixel = orm_dict(data)
@@ -224,14 +237,15 @@ def insertGripperList(db: Session, data_list: list[dict]):
         robotCode = data_list[0].get("robotCode")
         gripperList = []
         robot = db.scalars(select(Robot).where(Robot.robotCode == robotCode)).first()
+        id = getSnowFlakeId()
         for data in data_list:
-            id = getSnowFlakeId()
             robotGripper = RobotGripper(id=id, robotId=robot.id)
             dict_orm(data, robotGripper)
             gripperList.append(robotGripper)
         db.add_all(gripperList)
         db.commit()
-        return Result.success(message="insert successfully!")
+        out = db.scalar(select(RobotGripper).where(RobotGripper.id == id))
+        return orm_dict(out)
     except Exception as e:
         db.rollback()
         return Result.error(message=e)
@@ -239,11 +253,23 @@ def insertGripperList(db: Session, data_list: list[dict]):
 
 def selectCurrentGripper(db: Session, robotCode: str):
     robot = db.scalar(select(Robot).where(Robot.robotCode == robotCode))
+    # subquery SQL:
+    # select max(create_time) from robot_gripper where robot_id = #{robotId}
     maxTimeSQL = (
         select(func.max(RobotGripper.createTime))
         .where(RobotGripper.robotId == robot.id)
         .scalar_subquery()
     )
+
+    #final SQL:
+    # select 
+    # * 
+    # from robot_gripper 
+    # where create_time = (select max(create_time)
+    # from robot_gripper 
+    # where robot_id = #{robotId})
+    #  and 
+    # robot_id = #{robotId}
     robotGripper = db.scalar(
         select(RobotGripper).where(
             and_(
@@ -257,7 +283,7 @@ def selectCurrentGripper(db: Session, robotCode: str):
 
 async def push_data_loop(websocket, db_factory, robotCode, event):
     while True:
-        await asyncio.sleep(1)
+        await asyncio.sleep(1) # async wait 1 second.
         db = db_factory()
         try:
             if event == "rs":
