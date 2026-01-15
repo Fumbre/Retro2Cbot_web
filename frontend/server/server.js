@@ -61,7 +61,7 @@ app.use('/robot/:id/sensors', validateRobot, reflectiveRouter);
 app.use('/api/', apiRobots);
 
 // webSocket connection
-// connectToRobotApi(); // try with arduino without it
+connectToRobotApi(); // try with arduino without it
 initWSS(server)
 
 server.listen(PORT, () => {
