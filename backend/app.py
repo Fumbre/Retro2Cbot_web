@@ -1,13 +1,86 @@
 from dotenv import load_dotenv
 import uvicorn
-from database import app
+from service import (
+    insertRobots,
+    selectRobots,
+    insertReflectiveSensors,
+    insertRobotSonarData,
+    insertRobotPulses,
+    insertNeopixels,
+    insertGripperList,
+    push_data_loop
+)
 import os
-from weboscket import router as websocket
-from api import router as api
+import asyncio
 
 
-app.include_router(api)
-app.include_router(websocket)
+# Set to hold connected clients
+clients = set()
+
+manager = WebsocketConnectionManager()
+
+@app.post("/robots")
+async def insertRobot(request:Request):
+    params = await request.json() if hasattr(request, "json") else {}
+    return insertRobots(request=request,robotName=params.get("robotName"),robotCode=params.get("robotCode"))
+
+
+@app.get("/robots")
+def robotList(request:Request):
+    return selectRobots(request=request)
+
+
+@app.websocket("/ws/robot")
+async def websocket_endpoint(websocket: WebSocket):
+    clients.add(websocket)
+    
+    db = SessionLocal()
+    await manager.connect(websocket, "robot")
+    try:
+     while True:
+        data = await websocket.receive_json()
+        method = data.get("method")
+        push_task = None
+        if method == "GET":
+            robotCode = data.get("robotCode")
+            event = data.get("event")
+            if push_task:
+               push_task.cancel()
+            push_task = asyncio.create_task(push_data_loop(websocket=websocket,db_factory=SessionLocal,robotCode=robotCode,event=event)) 
+        else:
+           event = data.get("event")
+           data_list = list(data.get("data"))
+           if event == "rs":
+              result = insertReflectiveSensors(db=db, sensor_list=data_list)
+           elif event == "sonar":
+              result = insertRobotSonarData(db=db, list=data_list)
+           elif event == "pulses":
+              result = insertRobotPulses(db=db, list=data_list)
+           elif event == "neopixels":
+              result = insertNeopixels(db=db, data_list=data_list)
+           elif event == "gripper":
+              result = insertGripperList(db=db, data_list=data_list)
+           else:
+              result = {"error": "unknown event"}
+           for client in clients.copy():
+              try:
+               await client.send_json(data)
+              except websocket.ConnectionClosed:
+               clients.remove(client)
+         #   await websocket.send_json(result)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket=websocket,topic="robot")
+        if push_task: 
+           push_task.cancel() 
+        try: 
+         await push_task 
+        except asyncio.CancelledError: 
+           print("Push task fully stopped")
+    finally:
+        db.close()    
+        clients.remove(websocket)
+
+        
 
 
 if __name__ == "__main__":
