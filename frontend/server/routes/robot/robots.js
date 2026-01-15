@@ -54,7 +54,7 @@ router.get('/robots', async (req, res) => {
                     robot.sensorsSonar.push(...sonarLastData);
                 } else {
                     sonarLastData.length != 0 ?
-                        robot.sensorsSonar.push(sonarLastData) : robot.sensorsSonar.push(
+                        robot.sensorsSonar.push(...sonarLastData) : robot.sensorsSonar.push(
                             {
                                 direction: '0',
                                 sonarDistance: 0,

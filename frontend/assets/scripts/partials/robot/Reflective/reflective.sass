@@ -28,9 +28,12 @@ $colorTrans: .3s
         border-radius: 10px
     &__list
         display: flex
+        flex-wrap: wrap
         justify-content: space-between
+        gap: 15px
     &__item
         width: calc( (100% / 8) - 15px )
+        min-width: 100px
         // &:not(:last-child)
             // margin-right: 15px
     &__value
