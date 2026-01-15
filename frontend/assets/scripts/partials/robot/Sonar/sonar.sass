@@ -5,15 +5,17 @@
   padding-bottom: 20px
   &__title
     margin-bottom: 15px
-    text-align: end
+    text-align: center
   &__list
     display: flex
-    justify-content: space-around
+    justify-content: center
+    flex-wrap: wrap
     padding: 20px
     background-color: colors.$mainGreen
+    gap: 50px
   &__item
-    &:not(:last-child)
-      margin-right: 50px
+    // &:not(:last-child)
+      // margin-right: 50px
 
   &__value
     text-align: center
@@ -30,4 +32,3 @@
     margin: 0
   &__item[data-sonar-direction="2"]
     order: -1
-    margin-right: 50px

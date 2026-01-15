@@ -50,7 +50,6 @@ router.get('/robots', async (req, res) => {
 
                 robot.sensorsNeopixels.push(...neopixelsLastData);
 
-
                 if (robot.robotCode === "BB011") {
                     robot.sensorsSonar.push(...sonarLastData);
                 } else {
