@@ -1,15 +1,14 @@
 <section class="robots">
+    <nav class="robots__nav robots_nav ">
+        <ul class="robots_nav__list container">
+            <% for (i in data) {%>
+                <li class="robots_nav__item"><a href="#robotCode__<%=data[i].robotCode%>">
+                        <%= data[i].robotName%> (<%= data[i].robotCode%>)
+                    </a></li>
+                <%};%>
+        </ul>
+    </nav>
     <div class="robots__contianer container">
-        <nav class="robots__nav robots_nav">
-            <ul class="robots_nav__list list">
-                <% for (i in data) {%>
-                    <li class="robots_nav__item"><a href="#robotCode__<%=data[i].robotCode%>">
-                            <%= data[i].robotName%> (<%= data[i].robotCode%>)
-                        </a></li>
-                    <%};%>
-            </ul>
-        </nav>
-
         <ul id="robotList" class="robots__list list">
             <% for (item in data) {%>
                 <li class="robots__item">
